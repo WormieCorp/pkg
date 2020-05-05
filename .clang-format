@@ -1,0 +1,22 @@
+﻿---
+Language: Cpp
+BasedOnStyle: LLVM
+AlignConsecutiveAssignments: 'true'
+AlignEscapedNewlines: Left
+AlignTrailingComments: 'true'
+AllowShortIfStatementsOnASingleLine: Never
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBraces: Linux
+BreakBeforeTernaryOperators: 'true'
+BreakStringLiterals: 'true'
+ColumnLimit: '80'
+IndentCaseLabels: 'true'
+IndentPPDirectives: AfterHash
+IndentWidth: '2'
+KeepEmptyLinesAtTheStartOfBlocks: 'false'
+ReflowComments: 'true'
+SortIncludes: 'true'
+TabWidth: '2'
+UseTab: Never
+
+...
