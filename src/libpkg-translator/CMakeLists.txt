@@ -1,6 +1,7 @@
 set(C_SOURCES
   logging.c
   pkg-data.c
+  parsers/parsers.c
 )
 
 include(generate_product_version)
