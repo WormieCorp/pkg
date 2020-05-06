@@ -16,6 +16,15 @@ include(CTest)
 # Cached Configurations
 option(BUILD_SHARED_LIBS "Build shared libraries instead of static ones" ON)
 
+# Checks
+include(CheckIncludeFile)
+check_include_file(string.h HAVE_STRING_H)
+include(CheckSymbolExists)
+check_symbol_exists(_strdup "string.h" HAVE__STRDUP)
+if (NOT HAVE__STRDUP)
+  check_symbol_exists(strdup "string.h" HAVE_STRDUP)
+endif()
+
 # Definitions for all sub projects
 add_definitions(-D_CRT_SECURE_NO_WARNINGS=1)
 add_definitions(-DUNICODE)
@@ -24,5 +33,5 @@ add_definitions(-D_UNICODE)
 # Subdirectories
 add_subdirectory(src)
 if (BUILD_TESTING)
-add_subdirectory(tests)
+  add_subdirectory(tests)
 endif()

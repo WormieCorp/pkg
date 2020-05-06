@@ -2,6 +2,7 @@ set(C_SOURCES
   logging.c
   pkg-data.c
   launchers/launchers.c
+  parsers/pacman-parser.c
   parsers/parsers.c
 )
 
