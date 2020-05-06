@@ -85,6 +85,9 @@ bool parse_long_arguments(ArgumentsData *data, const char *argument,
   } else if (strcmp(argument, "debug") == 0) {
     data->flag |= DEBUG_ARG;
     return true;
+  } else if (strcmp(argument, "noprogressbar") == 0) {
+    data->flag |= HIDE_PROGRESS_ARG;
+    return true;
   }
 
   return add_unparsed_long_argument(argument, data, availableUnparsedSize);

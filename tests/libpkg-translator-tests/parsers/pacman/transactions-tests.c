@@ -193,3 +193,23 @@ void should_set_unsupported_argument_as_unparsed_arg(void **state)
 
   release_arguments_data(data);
 }
+
+void should_set_install_and_no_progress_arguments(void **state)
+{
+  (void)state;
+  char *argv[] = {
+      "-S",
+      "pkg",
+      "--noprogressbar",
+  };
+  int argc = 3;
+
+  ArgumentsData *data = pacman_parse_arguments(argc, argv);
+
+  assert_non_null(data);
+  assert_int_equal(data->action, INSTALL);
+  assert_int_equal(data->flag, HIDE_PROGRESS_ARG);
+  assert_int_equal(data->unparsedArgsCount, 1);
+
+  release_arguments_data(data);
+}
