@@ -1,5 +1,5 @@
 set(C_SOURCES
-  dummy.c
+  pkg-data.c
 )
 
 include(generate_product_version)
@@ -13,3 +13,4 @@ generate_product_version(
 add_library(pkg-translator ${C_SOURCES})
 include(GenerateExportHeader)
 generate_export_header(pkg-translator)
+target_include_directories(pkg-translator PUBLIC "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
