@@ -89,15 +89,6 @@ char **choco_get_launch_args(const ArgumentsData *arguments)
   add_packages(bufAr, &curlen, arguments->unparsedArgs,
                arguments->unparsedArgsCount);
 
-  if (arguments->flag & NODEP_ARG)
-    bufAr[curlen++] = _strdup("--ignore-dependencies");
-
-  if (arguments->flag & VERBOSE_ARG)
-    bufAr[curlen++] = _strdup("--verbose");
-
-  if (arguments->flag & DEBUG_ARG)
-    bufAr[curlen++] = _strdup("--debug");
-
   if (!arguments->confirm) { // The chocolatey argument confirm is opposite to
                              // other pkg managers
     bufAr[curlen++] = _strdup("--yes");
@@ -105,6 +96,18 @@ char **choco_get_launch_args(const ArgumentsData *arguments)
     // case something changes in the future
     bufAr[curlen++] = _strdup("--accept-license");
   }
+
+  if (arguments->flag & NODEP_ARG)
+    bufAr[curlen++] = _strdup("--ignore-dependencies");
+
+  if (arguments->flag & HIDE_PROGRESS_ARG)
+    bufAr[curlen++] = _strdup("--no-progress");
+
+  if (arguments->flag & VERBOSE_ARG)
+    bufAr[curlen++] = _strdup("--verbose");
+
+  if (arguments->flag & DEBUG_ARG)
+    bufAr[curlen++] = _strdup("--debug");
 
   add_non_package_arguments(bufAr, &curlen, arguments->unparsedArgs,
                             arguments->unparsedArgsCount);

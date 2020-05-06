@@ -33,6 +33,7 @@ int main(void)
       cmocka_unit_test(should_set_install_and_debug_arguments),
       cmocka_unit_test(should_set_install_verbose_and_debug_arguments),
       cmocka_unit_test(should_set_install_yes_and_allow_license_arguments),
+      cmocka_unit_test(should_set_install_and_no_progress_arguments),
       cmocka_unit_test(should_set_upgrade_all_when_upgrade_and_no_unparsed),
       cmocka_unit_test(should_set_upgrade_with_package_arguments),
       cmocka_unit_test(should_set_upgrade_all_when_upgrade_and_no_unparsed),
@@ -42,6 +43,7 @@ int main(void)
       cmocka_unit_test(should_set_upgrade_and_debug_arguments),
       cmocka_unit_test(should_set_upgrade_verbose_and_debug_arguments),
       cmocka_unit_test(should_set_upgrade_yes_and_allow_license_arguments),
+      cmocka_unit_test(should_set_upgrade_and_no_progress_arguments),
   };
 
   return cmocka_run_group_tests(parser_tests, NULL, NULL);

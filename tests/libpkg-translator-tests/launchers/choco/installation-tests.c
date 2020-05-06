@@ -167,3 +167,24 @@ void should_set_install_yes_and_allow_license_arguments(void **state)
   char **actual = choco_get_launch_args(&data);
   compare_helper(expected, 4, actual);
 }
+
+void should_set_install_and_no_progress_arguments(void **state)
+{
+  (void)state;
+  char *expected[] = {
+      "install",
+      "pkg",
+      "--no-progress",
+  };
+  ArgumentsData data = {
+      .action            = INSTALL,
+      .flag              = HIDE_PROGRESS_ARG,
+      .confirm           = true,
+      .unparsedArgsCount = 1,
+  };
+  data.unparsedArgs    = alloca(data.unparsedArgsCount * sizeof(char *));
+  data.unparsedArgs[0] = expected[1];
+
+  char **actual = choco_get_launch_args(&data);
+  compare_helper(expected, 3, actual);
+}

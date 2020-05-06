@@ -174,3 +174,22 @@ void should_set_upgrade_yes_and_allow_license_arguments(void **state)
   char **actual = choco_get_launch_args(&data);
   compare_helper(expected, 4, actual);
 }
+
+void should_set_upgrade_and_no_progress_arguments(void **state)
+{
+  (void)state;
+  char *expected[] = {
+      "upgrade",
+      "all",
+      "--no-progress",
+  };
+  ArgumentsData data = {
+      .action            = UPGRADE,
+      .flag              = HIDE_PROGRESS_ARG,
+      .confirm           = true,
+      .unparsedArgsCount = 0,
+  };
+
+  char **actual = choco_get_launch_args(&data);
+  compare_helper(expected, 3, actual);
+}
