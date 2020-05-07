@@ -28,7 +28,7 @@ ExternalProject_Get_Property(cmocka_ep binary_dir)
 if (WIN32)
   set(_cmocka_name "cmocka-static.lib")
 else()
-  set(_cmocka_name "libcmocka.a")
+  set(_cmocka_name "libcmocka-static.a")
 endif()
 
 set_property(TARGET cmocka::cmocka PROPERTY IMPORTED_LOCATION

@@ -1,0 +1,13 @@
+#ifndef _HAVE_PKG_CONFIG_H
+#define _HAVE_PKG_CONFIG_H
+
+#cmakedefine01 HAVE__STRDUP
+#cmakedefine01 HAVE_STRDUP
+
+#if HAVE__STRDUP
+#  define STRDUP _strdup
+#elif HAVE_STRDUP
+#  define STRDUP strdup
+#endif
+
+#endif /* _HAVE_PKG_CONFIG_H */

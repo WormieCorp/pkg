@@ -16,7 +16,7 @@ int main(int argc, char **argv)
   while (*pos) {
     printf(" %s", *pos);
     free(*pos);
-    *pos++;
+    pos++;
   }
 
   puts("'\n");

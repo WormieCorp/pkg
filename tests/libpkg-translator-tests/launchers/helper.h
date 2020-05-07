@@ -18,7 +18,7 @@ void compare_helper(const char **expected, int expectedCount, char **actual)
   while (*pos) {
     i++;
     free(*pos);
-    *pos++;
+    pos++;
   }
 
   free(actual);

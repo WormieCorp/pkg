@@ -30,8 +30,13 @@ add_definitions(-D_CRT_SECURE_NO_WARNINGS=1)
 add_definitions(-DUNICODE)
 add_definitions(-D_UNICODE)
 
+# Include directories fol all sub projects
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 # Subdirectories
 add_subdirectory(src)
 if (BUILD_TESTING)
   add_subdirectory(tests)
 endif()
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)

@@ -1,6 +1,7 @@
 #include "choco-launcher.h"
 #include "../logging.h"
 #include "../parsers/parsers.h"
+#include "config.h"
 #include "launchers.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,7 +24,7 @@ void add_packages(char **buffer, size_t *bufcurlen, const char **arguments,
 {
   for (int i = 0; i < argumentsCount; i++) {
     if (*(arguments[i]) != '-')
-      buffer[(*bufcurlen)++] = _strdup(arguments[i]);
+      buffer[(*bufcurlen)++] = STRDUP(arguments[i]);
   }
 }
 
@@ -32,7 +33,7 @@ void add_non_package_arguments(char **buffer, size_t *bufcurlen,
 {
   for (int i = 0; i < argumentsCount; i++) {
     if (*(arguments[i]) == '-') {
-      buffer[(*bufcurlen)++] = _strdup(arguments[i]);
+      buffer[(*bufcurlen)++] = STRDUP(arguments[i]);
     }
   }
 }
@@ -45,7 +46,7 @@ char **choco_get_launch_args(const ArgumentsData *arguments)
 
   if (!arguments) {
     char **bufAr = malloc(2 * sizeof(char *));
-    bufAr[0]     = _strdup("--help");
+    bufAr[0]     = STRDUP("--help");
     bufAr[1]     = NULL;
     return bufAr;
   }
@@ -56,33 +57,33 @@ char **choco_get_launch_args(const ArgumentsData *arguments)
 
   switch (arguments->action) {
     case INSTALL:
-      bufAr[curlen++] = _strdup("install");
+      bufAr[curlen++] = STRDUP("install");
       if (!(arguments->flag & HELP_ARG)
           && !has_packages(arguments->unparsedArgs,
                            arguments->unparsedArgsCount)) {
-        bufAr[curlen++] = _strdup("--help");
+        bufAr[curlen++] = STRDUP("--help");
         goto end;
       }
       break;
 
     case UPGRADE:
-      bufAr[curlen++] = _strdup("upgrade");
+      bufAr[curlen++] = STRDUP("upgrade");
       if (!(arguments->flag & HELP_ARG)
           && !has_packages(arguments->unparsedArgs,
                            arguments->unparsedArgsCount))
-        bufAr[curlen++] = _strdup("all");
+        bufAr[curlen++] = STRDUP("all");
       break;
 
     default:
       if (!(arguments->flag & HELP_ARG)) {
-        bufAr[curlen++] = _strdup("--help");
+        bufAr[curlen++] = STRDUP("--help");
         goto end;
       }
       break;
   }
 
   if (arguments->flag & HELP_ARG) {
-    bufAr[curlen++] = _strdup("--help");
+    bufAr[curlen++] = STRDUP("--help");
     goto end;
   }
 
@@ -91,23 +92,23 @@ char **choco_get_launch_args(const ArgumentsData *arguments)
 
   if (!arguments->confirm) { // The chocolatey argument confirm is opposite to
                              // other pkg managers
-    bufAr[curlen++] = _strdup("--yes");
+    bufAr[curlen++] = STRDUP("--yes");
     // Not needed really, as --yes implies --accept-license as well. But used in
     // case something changes in the future
-    bufAr[curlen++] = _strdup("--accept-license");
+    bufAr[curlen++] = STRDUP("--accept-license");
   }
 
   if (arguments->flag & NODEP_ARG)
-    bufAr[curlen++] = _strdup("--ignore-dependencies");
+    bufAr[curlen++] = STRDUP("--ignore-dependencies");
 
   if (arguments->flag & HIDE_PROGRESS_ARG)
-    bufAr[curlen++] = _strdup("--no-progress");
+    bufAr[curlen++] = STRDUP("--no-progress");
 
   if (arguments->flag & VERBOSE_ARG)
-    bufAr[curlen++] = _strdup("--verbose");
+    bufAr[curlen++] = STRDUP("--verbose");
 
   if (arguments->flag & DEBUG_ARG)
-    bufAr[curlen++] = _strdup("--debug");
+    bufAr[curlen++] = STRDUP("--debug");
 
   add_non_package_arguments(bufAr, &curlen, arguments->unparsedArgs,
                             arguments->unparsedArgsCount);

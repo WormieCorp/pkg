@@ -1,4 +1,6 @@
 #include <setjmp.h>
+#include <stdarg.h>
+#include <stdlib.h>
 
 #include <cmocka.h>
 #include <parsers/parsers.h>
