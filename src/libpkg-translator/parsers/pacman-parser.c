@@ -144,6 +144,10 @@ bool parse_long_remove_arguments(ArgumentsData *data, const char *argument,
     data->flag |= RECURSE_ARG;
     return true;
   }
+  if (strcmp(argument, "unneeded") == 0) {
+    data->flag |= UNNEEDED_ARG;
+    return true;
+  }
 
   return false;
 }
@@ -271,6 +275,9 @@ bool parse_short_remove_arguments(ArgumentsData *data, const char arg,
   switch (arg) {
     case 's':
       data->flag |= RECURSE_ARG;
+      break;
+    case 'u':
+      data->flag |= UNNEEDED_ARG;
       break;
     default:
       return false;
