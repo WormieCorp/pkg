@@ -6,6 +6,7 @@
 #include <parsers/parsers.h>
 
 #include "pacman/help-tests.c"
+#include "pacman/query-tests.c"
 #include "pacman/remove-tests.c"
 #include "pacman/sync-tests.c"
 #include "pacman/transactions-tests.c"
@@ -48,6 +49,7 @@ int main(void)
       cmocka_unit_test(should_set_unneeded_flag_long),
       cmocka_unit_test(should_set_no_save_flag),
       cmocka_unit_test(should_set_no_save_flag_long),
+      cmocka_unit_test(should_set_localonly_as_true),
   };
 
   return cmocka_run_group_tests(parser_tests, NULL, NULL);

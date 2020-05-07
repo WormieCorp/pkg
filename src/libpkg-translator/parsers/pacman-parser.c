@@ -24,7 +24,8 @@ ArgumentsData *pacman_parse_arguments(int argc, char **argv)
       argv[i]++;
     else if (data->flag & HELP_ARG)
       return data;
-    else if (data->action == NO_ACTION) {
+    else if (data->action == NO_ACTION
+             && !((data->flag & LOCALONLY_ARG) == LOCALONLY_ARG)) {
       release_arguments_data(data);
       return NULL;
     } else {
@@ -183,12 +184,16 @@ bool parse_short_operator_arguments(ArgumentsData *data, const char arg,
     return false;
 
   switch (arg) {
-    case 'S':
-      data->action = INSTALL;
+    case 'Q':
+      data->flag |= LOCALONLY_ARG;
       break;
 
     case 'R':
       data->action = UNINSTALL;
+      break;
+
+    case 'S':
+      data->action = INSTALL;
       break;
 
     default:
