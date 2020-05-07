@@ -48,5 +48,5 @@ ExternalProject_Get_Property(cmocka_ep source_dir)
 set(CMOCKA_INCLUDE_DIR ${source_dir}/include GLOBAL)
 
 include_directories(${CMOCKA_INCLUDE_DIR})
-add_subdirectory(libpkg-translator-tests)
+add_subdirectory(libpkgcore-tests)
 add_subdirectory(pkg-tests)

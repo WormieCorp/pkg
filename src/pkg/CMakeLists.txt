@@ -10,4 +10,4 @@ generate_product_version(
 )
 
 add_executable(pkg ${C_SOURCES})
-target_link_libraries(pkg PUBLIC pkg-translator)
+target_link_libraries(pkg PUBLIC pkgcore)

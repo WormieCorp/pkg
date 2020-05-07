@@ -90,7 +90,7 @@ void should_set_install_with_verbose_flag(void **state)
   (void)state;
   char *argv[] = {
       "-Sv",
-      "pkg-manager-translator",
+      "pkg",
   };
   int argc = 2;
 

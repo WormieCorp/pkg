@@ -1,6 +1,6 @@
 #ifndef _HAVE_PKG_DATA_H
 #define _HAVE_PKG_DATA_H 1
-#include "pkg-translator_export.h"
+#include "pkgcore_export.h"
 #include <stdbool.h>
 
 enum ActionType {
@@ -35,6 +35,6 @@ typedef struct ArgumentsData {
   int unparsedArgsCount;
 } ArgumentsData;
 
-PKG_TRANSLATOR_EXPORT void release_arguments_data(ArgumentsData *arguments);
+PKGCORE_EXPORT void release_arguments_data(ArgumentsData *arguments);
 
 #endif /* _HAVE_PKG_DATA_H */

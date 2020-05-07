@@ -7,7 +7,7 @@ set(_all_test_targets
 )
 
 foreach(_test_target ${_all_test_targets})
-  target_link_libraries(${_test_target} cmocka::cmocka pkg-translator)
+  target_link_libraries(${_test_target} cmocka::cmocka pkgcore)
   if (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
     target_compile_options(${_test_target} PRIVATE -Wno-incompatible-pointer-types)
   endif()
