@@ -20,7 +20,7 @@ enum ArgumentFlag {
   REFRESH_ARG       = 1 << 2,
   RECURSE_ARG       = 1 << 3,
   UNNEEDED_ARG      = 1 << 4,
-  SAVE_ARG          = 1 << 5,
+  NO_SAVE_ARG       = 1 << 5,
   HELP_ARG          = 1 << 6,
   VERBOSE_ARG       = 1 << 7,
   DEBUG_ARG         = 1 << 8,

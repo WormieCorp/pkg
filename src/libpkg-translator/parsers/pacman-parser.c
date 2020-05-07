@@ -148,6 +148,10 @@ bool parse_long_remove_arguments(ArgumentsData *data, const char *argument,
     data->flag |= UNNEEDED_ARG;
     return true;
   }
+  if (strcmp(argument, "nosave") == 0) {
+    data->flag |= NO_SAVE_ARG;
+    return true;
+  }
 
   return false;
 }
@@ -279,6 +283,8 @@ bool parse_short_remove_arguments(ArgumentsData *data, const char arg,
     case 'u':
       data->flag |= UNNEEDED_ARG;
       break;
+    case 'n':
+      data->flag |= NO_SAVE_ARG;
     default:
       return false;
   }

@@ -46,6 +46,8 @@ int main(void)
       cmocka_unit_test(should_set_recursive_flag_long),
       cmocka_unit_test(should_set_unneeded_flag),
       cmocka_unit_test(should_set_unneeded_flag_long),
+      cmocka_unit_test(should_set_no_save_flag),
+      cmocka_unit_test(should_set_no_save_flag_long),
   };
 
   return cmocka_run_group_tests(parser_tests, NULL, NULL);
