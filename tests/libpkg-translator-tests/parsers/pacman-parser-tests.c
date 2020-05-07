@@ -6,6 +6,7 @@
 #include <parsers/parsers.h>
 
 #include "pacman/help-tests.c"
+#include "pacman/sync-tests.c"
 #include "pacman/transactions-tests.c"
 
 int main(void)
@@ -31,6 +32,8 @@ int main(void)
       cmocka_unit_test(should_set_install_and_no_progress_arguments),
       cmocka_unit_test(should_set_install_and_confirm_as_false),
       cmocka_unit_test(should_set_install_and_nodeps_flag_long),
+      cmocka_unit_test(should_set_info_action),
+      cmocka_unit_test(should_set_info_action_long),
   };
 
   return cmocka_run_group_tests(parser_tests, NULL, NULL);

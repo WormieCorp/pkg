@@ -101,14 +101,31 @@ bool parse_long_transaction_arguments(ArgumentsData *data, const char *argument,
   return false;
 }
 
+bool parse_long_sync_arguments(ArgumentsData *data, const char *argument,
+                               int *availableUnparsedSize)
+{
+  (void)availableUnparsedSize;
+  if (data->action != INSTALL && data->action != UPGRADE && data->action != INFO
+      && data->action != LIST && data->action != SEARCH)
+    return false;
+
+  if (strcmp(argument, "info") == 0) {
+    data->action = INFO;
+    return true;
+  }
+
+  return false;
+}
+
 bool parse_long_arguments(ArgumentsData *data, const char *argument,
                           int *availableUnparsedSize)
 {
-#define LONG_PARSERS 3
+#define LONG_PARSERS 4
   static bool (*long_parsers[LONG_PARSERS])(ArgumentsData *, const char *,
                                             int *) = {
       parse_long_common_arguments,
       parse_long_transaction_arguments,
+      parse_long_sync_arguments,
       add_unparsed_long_argument,
   };
 
@@ -187,6 +204,8 @@ bool parse_short_sync_arguments(ArgumentsData *data, const char arg,
   switch (arg) {
     // These are not yet implemented
     case 'i':
+      data->action = INFO;
+      break;
     case 'l':
     case 'q': // Not sure about this one
     case 's':
