@@ -1,15 +1,11 @@
 #include "pacman-parser.h"
 #include "../logging.h"
+#include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define INCR_UNPARSED 10
-
-bool parse_long_arguments(ArgumentsData *data, const char *argument,
-                          int *availableUnparsedSize);
-bool parse_short_arguments(ArgumentsData *data, const char *argument,
-                           int *availableUnparsedSize);
 
 ArgumentsData *pacman_parse_arguments(int argc, char **argv)
 {
@@ -24,37 +20,19 @@ ArgumentsData *pacman_parse_arguments(int argc, char **argv)
   data->confirm             = true;
 
   for (int i = 0; i < argc; ++i) {
-    if (data->action == NO_ACTION && *argv[i] == '-') {
-      *argv[i]++;
-      switch (*(argv[i])) {
-        case 'h':
-          if (data->action == NO_ACTION)
-            data->flag |= HELP_ARG;
-          break;
-        case 'S':
-          data->action = INSTALL;
-          break;
-
-        default:
-          if (strcmp(argv[i], "-help") == 0) {
-            data->flag |= HELP_ARG;
-            return data;
-          }
-          release_arguments_data(data);
-          return NULL;
-      }
-      *argv[i]++;
-    } else if (data->action == NO_ACTION) {
+    if (*argv[i] == '-')
+      argv[i]++;
+    else if (data->flag & HELP_ARG)
+      return data;
+    else if (data->action == NO_ACTION) {
       release_arguments_data(data);
       return NULL;
-    } else if (*argv[i] != '-') {
-      if (!add_unparsed_argument(argv[i], data, &availableUnparsedSize)) {
+    } else {
+      if (!add_unparsed_argument(data, argv[i], &availableUnparsedSize)) {
         release_arguments_data(data);
         return NULL;
       }
       continue;
-    } else {
-      *argv[i]++;
     }
 
     if (*argv[i] == '-') {
@@ -73,72 +51,112 @@ ArgumentsData *pacman_parse_arguments(int argc, char **argv)
   return data;
 }
 
-bool parse_long_arguments(ArgumentsData *data, const char *argument,
-                          int *availableUnparsedSize)
+bool parse_long_common_arguments(ArgumentsData *data, const char *argument,
+                                 int *availableUnparsedSize)
 {
+  (void)availableUnparsedSize;
   if (strcmp(argument, "help") == 0) {
     data->flag |= HELP_ARG;
     return true;
-  } else if (strcmp(argument, "verbose") == 0) {
+  }
+
+  if (data->action == NO_ACTION)
+    return false;
+
+  if (strcmp(argument, "verbose") == 0) {
     data->flag |= VERBOSE_ARG;
-    return true;
-  } else if (strcmp(argument, "debug") == 0) {
+    return data->action != NO_ACTION;
+  }
+
+  if (strcmp(argument, "debug") == 0) {
     data->flag |= DEBUG_ARG;
-    return true;
-  } else if (strcmp(argument, "noprogressbar") == 0) {
+    return data->action != NO_ACTION;
+  }
+
+  return false;
+}
+
+bool parse_long_transaction_arguments(ArgumentsData *data, const char *argument,
+                                      int *availableUnparsedSize)
+{
+  (void)availableUnparsedSize;
+  if (data->action != INSTALL && data->action != UPGRADE
+      && data->action != UNINSTALL)
+    return false;
+
+  if (strcmp(argument, "noprogressbar") == 0) {
     data->flag |= HIDE_PROGRESS_ARG;
     return true;
   }
 
-  return add_unparsed_long_argument(argument, data, availableUnparsedSize);
+  return false;
 }
 
-bool parse_short_arguments(ArgumentsData *data, const char *argument,
-                           int *availableUnparsedSize)
+bool parse_long_arguments(ArgumentsData *data, const char *argument,
+                          int *availableUnparsedSize)
 {
-  while (*argument) {
-    char c = *argument;
-    switch (c) {
-      case 'h':
-        data->flag |= HELP_ARG;
-        break;
-      case 'v':
-        data->flag |= VERBOSE_ARG;
-        break;
+#define LONG_PARSERS 3
+  static bool (*long_parsers[LONG_PARSERS])(ArgumentsData *, const char *,
+                                            int *) = {
+      parse_long_common_arguments,
+      parse_long_transaction_arguments,
+      add_unparsed_long_argument,
+  };
 
-      default:
-        switch (data->action) {
-          case INSTALL:
-          case UPGRADE:
-            if (!parse_transaction_arguments(c, data)
-                && !add_unparsed_char(c, data, availableUnparsedSize))
-              return false;
-            break;
-          default:
-            if (!add_unparsed_char(c, data, availableUnparsedSize))
-              return false;
-            break;
-        }
-        break;
-    }
+  for (int i = 0; i < LONG_PARSERS; ++i) {
+    if (long_parsers[i](data, argument, availableUnparsedSize))
+      return true;
+  }
 
-    *argument++;
+  return false;
+}
+
+bool parse_short_operator_arguments(ArgumentsData *data, const char arg,
+                                    int *availableUnparsedSize)
+{
+  (void)availableUnparsedSize;
+  if (data->action != NO_ACTION)
+    return false;
+
+  switch (arg) {
+    case 'S':
+      data->action = INSTALL;
+      break;
+
+    default:
+      return false;
   }
 
   return true;
 }
 
-bool parse_transaction_arguments(const char arg, ArgumentsData *arguments)
+bool parse_short_common_arguments(ArgumentsData *data, const char arg,
+                                  int *availableUnparsedSize)
 {
-  if (!arg)
-    return true;
+  (void)availableUnparsedSize;
   switch (arg) {
-    case 'u':
-      arguments->action = UPGRADE;
+    case 'h':
+      data->flag |= HELP_ARG;
       break;
-    case 'y':
-      arguments->flag |= REFRESH_ARG;
+    case 'v':
+      data->flag |= VERBOSE_ARG;
       break;
+    default:
+      return false;
+  }
+
+  return true;
+}
+
+bool parse_short_transaction_arguments(ArgumentsData *arguments, const char arg,
+                                       int *availableUnparsedSize)
+{
+  (void)availableUnparsedSize;
+  if (arguments->action != INSTALL && arguments->action != UPGRADE
+      && arguments->action != UNINSTALL)
+    return false;
+
+  switch (arg) {
     case 'd':
       arguments->flag |= NODEP_ARG;
       break;
@@ -149,12 +167,71 @@ bool parse_transaction_arguments(const char arg, ArgumentsData *arguments)
   return true;
 }
 
+bool parse_short_sync_arguments(ArgumentsData *data, const char arg,
+                                int *availableUnparsedSize)
+{
+  (void)availableUnparsedSize;
+  if (data->action != INSTALL && data->action != UPGRADE && data->action != INFO
+      && data->action != LIST && data->action != SEARCH)
+    return false;
+
+  switch (arg) {
+    // These are not yet implemented
+    case 'i':
+    case 'l':
+    case 'q': // Not sure about this one
+    case 's':
+      break;
+    case 'u':
+      data->action = UPGRADE;
+      break;
+    case 'y':
+      data->flag |= REFRESH_ARG;
+      break;
+
+    default:
+      return false;
+  }
+
+  return true;
+}
+
+bool parse_short_arguments(ArgumentsData *data, const char *argument,
+                           int *availableUnparsedSize)
+{
+#define SHORT_PARSERS 5
+  static bool (*short_parsers[SHORT_PARSERS])(struct ArgumentsData *,
+                                              const char, int *) = {
+      parse_short_operator_arguments,
+      parse_short_common_arguments,
+      parse_short_transaction_arguments,
+      parse_short_sync_arguments,
+      add_unparsed_char,
+  };
+
+  while (*argument) {
+    bool result = false;
+    char c      = *argument;
+    for (int i = 0; i < SHORT_PARSERS; ++i) {
+      if (short_parsers[i](data, c, availableUnparsedSize)) {
+        result = true;
+        break;
+      }
+    }
+    if (!result)
+      return result;
+    argument++;
+  }
+
+  return true;
+}
+
 bool reallocate_data(ArgumentsData *arguments, int *availableSize)
 {
   if (arguments->unparsedArgsCount == *availableSize) {
     char **newUnparsedArgs =
         realloc(arguments->unparsedArgs,
-                (*availableSize * INCR_UNPARSED) * sizeof(char *));
+                (*availableSize + INCR_UNPARSED) * sizeof(char *));
     if (!newUnparsedArgs) {
       log_error("Unable to re-allocate memory. Unable to continue...\n");
       return false;
@@ -165,30 +242,30 @@ bool reallocate_data(ArgumentsData *arguments, int *availableSize)
   return true;
 }
 
-bool add_unparsed_char(const char arg, ArgumentsData *arguments,
+bool add_unparsed_char(ArgumentsData *arguments, const char arg,
                        int *availableSize)
 {
   char *buf = malloc(3 * sizeof(char));
   snprintf(buf, 3, "-%c", arg);
 
-  bool result = add_unparsed_argument(buf, arguments, availableSize);
+  bool result = add_unparsed_argument(arguments, buf, availableSize);
   free(buf);
   return result;
 }
 
-bool add_unparsed_long_argument(const char *arg, ArgumentsData *arguments,
+bool add_unparsed_long_argument(ArgumentsData *arguments, const char *arg,
                                 int *availableSize)
 {
   size_t len = 3 + strlen(arg);
   char *buf  = malloc(len * sizeof(char));
   snprintf(buf, len, "--%s", arg);
 
-  bool result = add_unparsed_argument(buf, arguments, availableSize);
+  bool result = add_unparsed_argument(arguments, buf, availableSize);
   free(buf);
   return result;
 }
 
-bool add_unparsed_argument(const char *arg, ArgumentsData *arguments,
+bool add_unparsed_argument(ArgumentsData *arguments, const char *arg,
                            int *availableSize)
 {
   if (!reallocate_data(arguments, availableSize))
@@ -196,6 +273,6 @@ bool add_unparsed_argument(const char *arg, ArgumentsData *arguments,
 
   log_verbose("Added unparsed argument '%s'!\n", arg);
 
-  arguments->unparsedArgs[arguments->unparsedArgsCount++] = _strdup(arg);
+  arguments->unparsedArgs[arguments->unparsedArgsCount++] = STRDUP(arg);
   return arguments->unparsedArgs[arguments->unparsedArgsCount - 1] != NULL;
 }
