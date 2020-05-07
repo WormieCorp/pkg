@@ -117,6 +117,10 @@ bool parse_long_sync_arguments(ArgumentsData *data, const char *argument,
     data->action = LIST;
     return true;
   }
+  if (strcmp(argument, "search") == 0) {
+    data->action = SEARCH;
+    return true;
+  }
 
   return false;
 }
@@ -206,15 +210,15 @@ bool parse_short_sync_arguments(ArgumentsData *data, const char arg,
     return false;
 
   switch (arg) {
-    // These are not yet implemented
     case 'i':
       data->action = INFO;
       break;
     case 'l':
       data->action = LIST;
       break;
-    case 'q': // Not sure about this one
+    case 'q': // Not sure about this one, but we will ignore it anyhow
     case 's':
+      data->action = SEARCH;
       break;
     case 'u':
       data->action = UPGRADE;

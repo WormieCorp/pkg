@@ -74,3 +74,42 @@ void should_set_list_action_long(void **state)
 
   release_arguments_data(data);
 }
+
+void should_set_search_action(void **state)
+{
+  (void)state;
+  (void)state;
+  int argc     = 2;
+  char *argv[] = {
+      "-Ss",
+      "what",
+  };
+
+  ArgumentsData *data = pacman_parse_arguments(argc, argv);
+
+  assert_non_null(data);
+  assert_int_equal(data->action, SEARCH);
+  assert_int_equal(data->unparsedArgsCount, 1);
+
+  release_arguments_data(data);
+}
+
+void should_set_search_action_long(void **state)
+{
+  (void)state;
+  (void)state;
+  int argc     = 3;
+  char *argv[] = {
+      "-S",
+      "what",
+      "--search",
+  };
+
+  ArgumentsData *data = pacman_parse_arguments(argc, argv);
+
+  assert_non_null(data);
+  assert_int_equal(data->action, SEARCH);
+  assert_int_equal(data->unparsedArgsCount, 1);
+
+  release_arguments_data(data);
+}
