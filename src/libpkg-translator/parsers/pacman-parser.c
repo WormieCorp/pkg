@@ -73,6 +73,11 @@ bool parse_long_common_arguments(ArgumentsData *data, const char *argument,
     return data->action != NO_ACTION;
   }
 
+  if (strcmp(argument, "noconfirm") == 0) {
+    data->confirm = false;
+    return data->action != NO_ACTION;
+  }
+
   return false;
 }
 

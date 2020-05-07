@@ -29,6 +29,7 @@ int main(void)
       cmocka_unit_test(should_set_install_with_verbose_flag_long),
       cmocka_unit_test(should_set_install_with_debug_flag_long),
       cmocka_unit_test(should_set_install_and_no_progress_arguments),
+      cmocka_unit_test(should_set_install_and_confirm_as_false),
   };
 
   return cmocka_run_group_tests(parser_tests, NULL, NULL);

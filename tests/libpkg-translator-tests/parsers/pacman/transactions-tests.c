@@ -213,3 +213,23 @@ void should_set_install_and_no_progress_arguments(void **state)
 
   release_arguments_data(data);
 }
+
+void should_set_install_and_confirm_as_false(void **state)
+{
+  (void)state;
+  int argc     = 3;
+  char *argv[] = {
+      "-S",
+      "pkg",
+      "--noconfirm",
+  };
+
+  ArgumentsData *data = pacman_parse_arguments(argc, argv);
+
+  assert_non_null(data);
+  assert_int_equal(data->action, INSTALL);
+  assert_false(data->confirm);
+  assert_int_equal(data->unparsedArgsCount, 1);
+
+  release_arguments_data(data);
+}
