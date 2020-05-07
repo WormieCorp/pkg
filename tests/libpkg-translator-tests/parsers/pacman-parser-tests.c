@@ -34,6 +34,8 @@ int main(void)
       cmocka_unit_test(should_set_install_and_nodeps_flag_long),
       cmocka_unit_test(should_set_info_action),
       cmocka_unit_test(should_set_info_action_long),
+      cmocka_unit_test(should_set_list_action),
+      cmocka_unit_test(should_set_list_action_long),
   };
 
   return cmocka_run_group_tests(parser_tests, NULL, NULL);

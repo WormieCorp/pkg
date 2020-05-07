@@ -113,6 +113,10 @@ bool parse_long_sync_arguments(ArgumentsData *data, const char *argument,
     data->action = INFO;
     return true;
   }
+  if (strcmp(argument, "list") == 0) {
+    data->action = LIST;
+    return true;
+  }
 
   return false;
 }
@@ -207,6 +211,8 @@ bool parse_short_sync_arguments(ArgumentsData *data, const char arg,
       data->action = INFO;
       break;
     case 'l':
+      data->action = LIST;
+      break;
     case 'q': // Not sure about this one
     case 's':
       break;
