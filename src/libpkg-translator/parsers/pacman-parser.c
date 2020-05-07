@@ -20,28 +20,32 @@ ArgumentsData *pacman_parse_arguments(int argc, char **argv)
   data->confirm             = true;
 
   for (int i = 0; i < argc; ++i) {
+    int offset = 0;
     if (*argv[i] == '-')
-      argv[i]++;
+      offset++;
     else if (data->flag & HELP_ARG)
       return data;
     else if (data->action == NO_ACTION
-             && !((data->flag & LOCALONLY_ARG) == LOCALONLY_ARG)) {
+             && (data->flag & LOCALONLY_ARG) != LOCALONLY_ARG) {
       release_arguments_data(data);
       return NULL;
     } else {
-      if (!add_unparsed_argument(data, argv[i], &availableUnparsedSize)) {
+      if (!add_unparsed_argument(data, argv[i] + offset,
+                                 &availableUnparsedSize)) {
         release_arguments_data(data);
         return NULL;
       }
       continue;
     }
 
-    if (*argv[i] == '-') {
-      if (!parse_long_arguments(data, argv[i] + 1, &availableUnparsedSize)) {
+    if (*(argv[i] + offset) == '-') {
+      if (!parse_long_arguments(data, argv[i] + offset + 1,
+                                &availableUnparsedSize)) {
         release_arguments_data(data);
         return NULL;
       }
-    } else if (!parse_short_arguments(data, argv[i], &availableUnparsedSize)) {
+    } else if (!parse_short_arguments(data, argv[i] + offset,
+                                      &availableUnparsedSize)) {
       release_arguments_data(data);
       return NULL;
     }
@@ -107,7 +111,8 @@ bool parse_long_sync_arguments(ArgumentsData *data, const char *argument,
 {
   (void)availableUnparsedSize;
   if (data->action != INSTALL && data->action != UPGRADE && data->action != INFO
-      && data->action != LIST && data->action != SEARCH)
+      && data->action != LIST && data->action != SEARCH
+      && (data->flag & LOCALONLY_ARG) != LOCALONLY_ARG)
     return false;
 
   if (strcmp(argument, "info") == 0) {
@@ -122,11 +127,19 @@ bool parse_long_sync_arguments(ArgumentsData *data, const char *argument,
     data->action = SEARCH;
     return true;
   }
-  if (strcmp(argument, "sysupgrade") == 0) {
+  if ((data->flag & LOCALONLY_ARG) != LOCALONLY_ARG
+      && strcmp(argument, "sysupgrade") == 0) {
     data->action = UPGRADE;
     return true;
   }
-  if (strcmp(argument, "refresh") == 0) {
+  if ((data->flag & LOCALONLY_ARG) == LOCALONLY_ARG
+      && strcmp(argument, "upgrades") == 0) {
+    data->action = UPGRADE;
+    return true;
+  }
+
+  if ((data->flag & LOCALONLY_ARG) != LOCALONLY_ARG
+      && strcmp(argument, "refresh") == 0) {
     data->flag |= REFRESH_ARG;
     return true;
   }
@@ -245,7 +258,8 @@ bool parse_short_sync_arguments(ArgumentsData *data, const char arg,
 {
   (void)availableUnparsedSize;
   if (data->action != INSTALL && data->action != UPGRADE && data->action != INFO
-      && data->action != LIST && data->action != SEARCH)
+      && data->action != LIST && data->action != SEARCH
+      && (data->flag & LOCALONLY_ARG) != LOCALONLY_ARG)
     return false;
 
   switch (arg) {
@@ -256,6 +270,7 @@ bool parse_short_sync_arguments(ArgumentsData *data, const char arg,
       data->action = LIST;
       break;
     case 'q': // Not sure about this one, but we will ignore it anyhow
+      break;
     case 's':
       data->action = SEARCH;
       break;
@@ -263,7 +278,8 @@ bool parse_short_sync_arguments(ArgumentsData *data, const char arg,
       data->action = UPGRADE;
       break;
     case 'y':
-      data->flag |= REFRESH_ARG;
+      if ((data->flag & LOCALONLY_ARG) != LOCALONLY_ARG)
+        data->flag |= REFRESH_ARG;
       break;
 
     default:

@@ -50,6 +50,17 @@ int main(void)
       cmocka_unit_test(should_set_no_save_flag),
       cmocka_unit_test(should_set_no_save_flag_long),
       cmocka_unit_test(should_set_localonly_as_true),
+      cmocka_unit_test(should_set_upgrade_action_and_localonly_flag),
+      cmocka_unit_test(should_set_upgrade_action_and_localonly_flag_long),
+      cmocka_unit_test(should_not_set_upgrade_action_with_sync_long_option),
+      cmocka_unit_test(should_not_set_refresh_flag_when_local_only),
+      cmocka_unit_test(should_not_set_refresh_flag_when_local_only_long),
+      cmocka_unit_test(should_set_info_action_with_localonly_flag),
+      cmocka_unit_test(should_set_info_action_with_localonly_flag_long),
+      cmocka_unit_test(should_set_list_action_with_localonly_flag),
+      cmocka_unit_test(should_set_list_action_with_localonly_flag_long),
+      cmocka_unit_test(should_set_search_action_with_localonly_flag),
+      cmocka_unit_test(should_set_search_action_with_localonly_flag_long),
   };
 
   return cmocka_run_group_tests(parser_tests, NULL, NULL);
