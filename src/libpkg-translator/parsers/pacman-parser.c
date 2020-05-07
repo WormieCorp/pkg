@@ -121,6 +121,10 @@ bool parse_long_sync_arguments(ArgumentsData *data, const char *argument,
     data->action = SEARCH;
     return true;
   }
+  if (strcmp(argument, "sysupgrade") == 0) {
+    data->action = UPGRADE;
+    return true;
+  }
 
   return false;
 }

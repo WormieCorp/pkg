@@ -50,21 +50,6 @@ void should_set_single_package_for_install_action(void **state)
   release_arguments_data(data);
 }
 
-void should_set_upgrade_action(void **state)
-{
-  (void)state;
-  char *argv[] = {"-Su"};
-  int argc     = 1;
-
-  ArgumentsData *data = pacman_parse_arguments(argc, argv);
-
-  assert_non_null(data);
-  assert_int_equal(data->action, UPGRADE);
-  assert_int_equal(data->unparsedArgsCount, 0);
-
-  release_arguments_data(data);
-}
-
 void should_set_refresh_flag(void **state)
 {
   (void)state;

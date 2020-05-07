@@ -1,6 +1,41 @@
 #include <cmocka.h>
 #include <parsers/parsers.h>
 
+void should_set_upgrade_action(void **state)
+{
+  (void)state;
+  char *argv[] = {"-Su"};
+  int argc     = 1;
+
+  ArgumentsData *data = pacman_parse_arguments(argc, argv);
+
+  assert_non_null(data);
+  assert_int_equal(data->action, UPGRADE);
+  assert_int_equal(data->flag, NO_ACTION);
+  assert_int_equal(data->unparsedArgsCount, 0);
+
+  release_arguments_data(data);
+}
+
+void should_set_upgrade_action_long(void **state)
+{
+  (void)state;
+  char *argv[] = {
+      "-S",
+      "--sysupgrade",
+  };
+  int argc = 2;
+
+  ArgumentsData *data = pacman_parse_arguments(argc, argv);
+
+  assert_non_null(data);
+  assert_int_equal(data->action, UPGRADE);
+  assert_int_equal(data->flag, NO_ACTION);
+  assert_int_equal(data->unparsedArgsCount, 0);
+
+  release_arguments_data(data);
+}
+
 void should_set_info_action(void **state)
 {
   (void)state;
@@ -15,6 +50,7 @@ void should_set_info_action(void **state)
 
   assert_non_null(data);
   assert_int_equal(data->action, INFO);
+  assert_int_equal(data->flag, NO_ACTION);
   assert_int_equal(data->unparsedArgsCount, 1);
 
   release_arguments_data(data);
@@ -35,6 +71,7 @@ void should_set_info_action_long(void **state)
 
   assert_non_null(data);
   assert_int_equal(data->action, INFO);
+  assert_int_equal(data->flag, NO_ACTION);
   assert_int_equal(data->unparsedArgsCount, 1);
 
   release_arguments_data(data);
@@ -51,6 +88,7 @@ void should_set_list_action(void **state)
 
   assert_non_null(data);
   assert_int_equal(data->action, LIST);
+  assert_int_equal(data->flag, NO_ACTION);
   assert_int_equal(data->unparsedArgsCount, 0);
 
   release_arguments_data(data);
@@ -70,6 +108,7 @@ void should_set_list_action_long(void **state)
 
   assert_non_null(data);
   assert_int_equal(data->action, LIST);
+  assert_int_equal(data->flag, NO_ACTION);
   assert_int_equal(data->unparsedArgsCount, 0);
 
   release_arguments_data(data);
@@ -89,6 +128,7 @@ void should_set_search_action(void **state)
 
   assert_non_null(data);
   assert_int_equal(data->action, SEARCH);
+  assert_int_equal(data->flag, NO_ACTION);
   assert_int_equal(data->unparsedArgsCount, 1);
 
   release_arguments_data(data);
@@ -109,6 +149,7 @@ void should_set_search_action_long(void **state)
 
   assert_non_null(data);
   assert_int_equal(data->action, SEARCH);
+  assert_int_equal(data->flag, NO_ACTION);
   assert_int_equal(data->unparsedArgsCount, 1);
 
   release_arguments_data(data);
