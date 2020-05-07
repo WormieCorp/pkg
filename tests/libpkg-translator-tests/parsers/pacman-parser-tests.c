@@ -25,6 +25,7 @@ int main(void)
       cmocka_unit_test(should_set_upgrade_action),
       cmocka_unit_test(should_set_upgrade_action_long),
       cmocka_unit_test(should_set_refresh_flag),
+      cmocka_unit_test(should_set_refresh_flag_long),
       cmocka_unit_test(should_set_upgrade_action_and_refresh_flag),
       cmocka_unit_test(should_set_install_action_with_nodeps_flag),
       cmocka_unit_test(should_set_install_with_verbose_flag),

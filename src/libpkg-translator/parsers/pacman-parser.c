@@ -125,6 +125,10 @@ bool parse_long_sync_arguments(ArgumentsData *data, const char *argument,
     data->action = UPGRADE;
     return true;
   }
+  if (strcmp(argument, "refresh") == 0) {
+    data->flag |= REFRESH_ARG;
+    return true;
+  }
 
   return false;
 }

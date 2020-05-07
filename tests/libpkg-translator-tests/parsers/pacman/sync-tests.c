@@ -36,6 +36,41 @@ void should_set_upgrade_action_long(void **state)
   release_arguments_data(data);
 }
 
+void should_set_refresh_flag(void **state)
+{
+  (void)state;
+  char *argv[] = {"-Sy"};
+  int argc     = 1;
+
+  ArgumentsData *data = pacman_parse_arguments(argc, argv);
+
+  assert_non_null(data);
+  assert_int_equal(data->action, INSTALL);
+  assert_int_equal(data->flag, REFRESH_ARG);
+  assert_int_equal(data->unparsedArgsCount, 0);
+
+  release_arguments_data(data);
+}
+
+void should_set_refresh_flag_long(void **state)
+{
+  (void)state;
+  char *argv[] = {
+      "-S",
+      "--refresh",
+  };
+  int argc = 2;
+
+  ArgumentsData *data = pacman_parse_arguments(argc, argv);
+
+  assert_non_null(data);
+  assert_int_equal(data->action, INSTALL);
+  assert_int_equal(data->flag, REFRESH_ARG);
+  assert_int_equal(data->unparsedArgsCount, 0);
+
+  release_arguments_data(data);
+}
+
 void should_set_info_action(void **state)
 {
   (void)state;
