@@ -1,6 +1,5 @@
 #ifndef _HAVE_PKG_LAUNCHERS_H
 #define _HAVE_PKG_LAUNCHERS_H 1
-#include "choco-launcher.h"
 #include "pkgcore_export.h"
 #include <stdbool.h>
 

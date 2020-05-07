@@ -18,7 +18,7 @@ void should_set_help_argument_on_no_action(void **state)
       NULL,
   };
 
-  char **actual = choco_get_launch_args(&data);
+  char **actual = choco_transform_arguments(&data);
 
   compare_helper(expected, 1, actual);
 }

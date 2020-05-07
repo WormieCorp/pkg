@@ -1,8 +1,7 @@
-#include "choco-launcher.h"
+#include "choco-transformer.h"
 #include "../logging.h"
 #include "../parsers/parsers.h"
 #include "config.h"
-#include "launchers.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -38,7 +37,7 @@ void add_non_package_arguments(char **buffer, size_t *bufcurlen,
   }
 }
 
-char **choco_get_launch_args(const ArgumentsData *arguments)
+char **choco_transform_arguments(const ArgumentsData *arguments)
 {
   /*printf("Using transformer: "
          "\033[38;2;36;44;92;48;2;128;181;227mchocolatey\033[0m\n");*/

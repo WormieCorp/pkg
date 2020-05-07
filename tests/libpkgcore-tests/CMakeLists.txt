@@ -1,9 +1,9 @@
 add_executable(pacman-parser-tests parsers/pacman-parser-tests.c)
-add_executable(choco-launcher-tests launchers/choco-launcher-tests.c)
+add_executable(choco-transformer-tests transformers/choco-transformer-tests.c)
 
 set(_all_test_targets
   pacman-parser-tests
-  choco-launcher-tests
+  choco-transformer-tests
 )
 
 foreach(_test_target ${_all_test_targets})

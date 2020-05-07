@@ -1,10 +1,10 @@
 set(C_SOURCES
   logging.c
   pkg-data.c
-  launchers/choco-launcher.c
   launchers/launchers.c
   parsers/pacman-parser.c
   parsers/parsers.c
+  transformers/choco-transformer.c
 )
 
 include(generate_product_version)
