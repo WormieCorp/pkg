@@ -6,6 +6,7 @@
 #include <parsers/parsers.h>
 
 #include "pacman/help-tests.c"
+#include "pacman/remove-tests.c"
 #include "pacman/sync-tests.c"
 #include "pacman/transactions-tests.c"
 
@@ -40,6 +41,7 @@ int main(void)
       cmocka_unit_test(should_set_list_action_long),
       cmocka_unit_test(should_set_search_action),
       cmocka_unit_test(should_set_search_action_long),
+      cmocka_unit_test(should_set_remove_operation),
   };
 
   return cmocka_run_group_tests(parser_tests, NULL, NULL);

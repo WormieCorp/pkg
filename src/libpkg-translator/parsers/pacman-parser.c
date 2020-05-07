@@ -165,6 +165,10 @@ bool parse_short_operator_arguments(ArgumentsData *data, const char arg,
       data->action = INSTALL;
       break;
 
+    case 'R':
+      data->action = UNINSTALL;
+      break;
+
     default:
       return false;
   }
