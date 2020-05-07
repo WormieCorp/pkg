@@ -133,15 +133,29 @@ bool parse_long_sync_arguments(ArgumentsData *data, const char *argument,
   return false;
 }
 
+bool parse_long_remove_arguments(ArgumentsData *data, const char *argument,
+                                 int *availableUnparsedSize)
+{
+  (void)availableUnparsedSize;
+  if (data->action != UNINSTALL)
+    return false;
+
+  if (strcmp(argument, "recursive") == 0) {
+    data->flag |= RECURSE_ARG;
+    return true;
+  }
+
+  return false;
+}
+
 bool parse_long_arguments(ArgumentsData *data, const char *argument,
                           int *availableUnparsedSize)
 {
-#define LONG_PARSERS 4
+#define LONG_PARSERS 5
   static bool (*long_parsers[LONG_PARSERS])(ArgumentsData *, const char *,
                                             int *) = {
-      parse_long_common_arguments,
-      parse_long_transaction_arguments,
-      parse_long_sync_arguments,
+      parse_long_common_arguments, parse_long_transaction_arguments,
+      parse_long_sync_arguments,   parse_long_remove_arguments,
       add_unparsed_long_argument,
   };
 
@@ -246,17 +260,34 @@ bool parse_short_sync_arguments(ArgumentsData *data, const char arg,
   return true;
 }
 
+bool parse_short_remove_arguments(ArgumentsData *data, const char arg,
+                                  int *availableUnparsedSize)
+{
+  (void)availableUnparsedSize;
+
+  if (data->action != UNINSTALL)
+    return false;
+
+  switch (arg) {
+    case 's':
+      data->flag |= RECURSE_ARG;
+      break;
+    default:
+      return false;
+  }
+
+  return true;
+}
+
 bool parse_short_arguments(ArgumentsData *data, const char *argument,
                            int *availableUnparsedSize)
 {
-#define SHORT_PARSERS 5
+#define SHORT_PARSERS 6
   static bool (*short_parsers[SHORT_PARSERS])(struct ArgumentsData *,
                                               const char, int *) = {
-      parse_short_operator_arguments,
-      parse_short_common_arguments,
-      parse_short_transaction_arguments,
-      parse_short_sync_arguments,
-      add_unparsed_char,
+      parse_short_operator_arguments,    parse_short_common_arguments,
+      parse_short_transaction_arguments, parse_short_sync_arguments,
+      parse_short_remove_arguments,      add_unparsed_char,
   };
 
   while (*argument) {

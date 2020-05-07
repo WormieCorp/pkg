@@ -16,3 +16,38 @@ void should_set_remove_operation(void **state)
   assert_int_equal(data->action, UNINSTALL);
   release_arguments_data(data);
 }
+
+void should_set_recursive_flag(void **state)
+{
+  (void)state;
+  int argc     = 2;
+  char *argv[] = {
+      "-Rs",
+      "pkg",
+  };
+
+  ArgumentsData *data = pacman_parse_arguments(argc, argv);
+
+  assert_non_null(data);
+  assert_int_equal(data->action, UNINSTALL);
+  assert_int_equal(data->flag, RECURSE_ARG);
+  release_arguments_data(data);
+}
+
+void should_set_recursive_flag_long(void **state)
+{
+  (void)state;
+  int argc     = 3;
+  char *argv[] = {
+      "-R",
+      "pkg",
+      "--recursive",
+  };
+
+  ArgumentsData *data = pacman_parse_arguments(argc, argv);
+
+  assert_non_null(data);
+  assert_int_equal(data->action, UNINSTALL);
+  assert_int_equal(data->flag, RECURSE_ARG);
+  release_arguments_data(data);
+}

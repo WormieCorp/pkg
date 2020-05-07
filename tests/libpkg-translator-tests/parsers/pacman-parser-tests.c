@@ -42,6 +42,8 @@ int main(void)
       cmocka_unit_test(should_set_search_action),
       cmocka_unit_test(should_set_search_action_long),
       cmocka_unit_test(should_set_remove_operation),
+      cmocka_unit_test(should_set_recursive_flag),
+      cmocka_unit_test(should_set_recursive_flag_long),
   };
 
   return cmocka_run_group_tests(parser_tests, NULL, NULL);
