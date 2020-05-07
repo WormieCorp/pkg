@@ -65,17 +65,17 @@ bool parse_long_common_arguments(ArgumentsData *data, const char *argument,
 
   if (strcmp(argument, "verbose") == 0) {
     data->flag |= VERBOSE_ARG;
-    return data->action != NO_ACTION;
+    return true;
   }
 
   if (strcmp(argument, "debug") == 0) {
     data->flag |= DEBUG_ARG;
-    return data->action != NO_ACTION;
+    return true;
   }
 
   if (strcmp(argument, "noconfirm") == 0) {
     data->confirm = false;
-    return data->action != NO_ACTION;
+    return true;
   }
 
   return false;
@@ -91,6 +91,10 @@ bool parse_long_transaction_arguments(ArgumentsData *data, const char *argument,
 
   if (strcmp(argument, "noprogressbar") == 0) {
     data->flag |= HIDE_PROGRESS_ARG;
+    return true;
+  }
+  if (strcmp(argument, "nodeps") == 0) {
+    data->flag |= NODEP_ARG;
     return true;
   }
 

@@ -233,3 +233,23 @@ void should_set_install_and_confirm_as_false(void **state)
 
   release_arguments_data(data);
 }
+
+void should_set_install_and_nodeps_flag_long(void **state)
+{
+  (void)state;
+  int argc     = 3;
+  char *argv[] = {
+      "-S",
+      "pkg",
+      "--nodeps",
+  };
+
+  ArgumentsData *data = pacman_parse_arguments(argc, argv);
+
+  assert_non_null(data);
+  assert_int_equal(data->action, INSTALL);
+  assert_int_equal(data->flag, NODEP_ARG);
+  assert_int_equal(data->unparsedArgsCount, 1);
+
+  release_arguments_data(data);
+}
