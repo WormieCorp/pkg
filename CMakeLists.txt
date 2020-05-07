@@ -5,7 +5,15 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules;${CMAKE_MODULE_
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 
-project(pkg-manager-translator VERSION 0.1.0 DESCRIPTION "${_description}" HOMEPAGE_URL "https://github.com/WormieCorp/pkg-manager-translator" LANGUAGES C)
+if (CMAKE_VERSION VERSION_LESS "3.11.0")
+  project(pkg-manager-translator VERSION 0.1.0 LANGUAGES C CXX) # We must have CXX enabled on older cmake versions
+else()
+  project(pkg-manager-translator VERSION 0.1.0 LANGUAGES C) # We must have CXX enabled on older cmake versions
+endif()
+set(CMAKE_PROJECT_DESCRIPTION "${_description}")
+set(PROJECT_DESCRIPTION "${_description}")
+set(CMAKE_HOMEPAGE_URL "https://github.com/WormieCorp/pkg")
+set(PROJECT_HOMEPAGE_URL "${CMAKE_HOMEPAGE_URL}")
 
 # Custom include
 set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT Deps)
