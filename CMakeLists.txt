@@ -24,19 +24,35 @@ include(CTest)
 # Cached Configurations
 option(BUILD_SHARED_LIBS "Build shared libraries instead of static ones" OFF)
 
-# Checks
-include(CheckIncludeFile)
-check_include_file(string.h HAVE_STRING_H)
-include(CheckSymbolExists)
-check_symbol_exists(_strdup "string.h" HAVE__STRDUP)
-if (NOT HAVE__STRDUP)
-  check_symbol_exists(strdup "string.h" HAVE_STRDUP)
-endif()
-
-# Definitions for all sub projects
+# Definitions for all sub projects and checks
 if (WIN32)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS=1)
 endif(WIN32)
+
+# Checks
+include(CheckIncludeFile)
+include(CheckSymbolExists)
+include(CheckFunctionExists)
+check_include_file(alloca.h HAVE_ALLOCA_H)
+check_include_file(malloc.h HAVE_MALLOC_H)
+check_include_file(string.h HAVE_STRING_H)
+check_include_file(sys/stat.h HAVE_SYS_STAT_H)
+check_symbol_exists(_strdup "string.h" HAVE__STRDUP)
+check_symbol_exists(strtok_r "string.h" HAVE_STRTOK_R)
+check_symbol_exists(strtok_s "string.h" HAVE_STRTOK_S)
+
+if (HAVE_ALLOCA_H)
+  check_symbol_exists(alloca "alloca.h" HAVE_ALLOCA)
+elseif(HAVE_MALLOC_H)
+  check_symbol_exists(alloca "malloc.h" HAVE_ALLOCA)
+endif()
+if (NOT HAVE__STRDUP)
+  check_symbol_exists(strdup "string.h" HAVE_STRDUP)
+endif()
+if (HAVE_SYS_STAT_H)
+  check_symbol_exists(stat "sys/stat.h" HAVE_STAT)
+  check_symbol_exists(S_IFREG "sys/stat.h" HAVE_S_IFREG)
+endif()
 
 # Include directories fol all sub projects
 include_directories(${CMAKE_CURRENT_BINARY_DIR})

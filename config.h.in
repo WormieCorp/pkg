@@ -1,13 +1,35 @@
 #ifndef _HAVE_PKG_CONFIG_H
 #define _HAVE_PKG_CONFIG_H
 
+#cmakedefine01 HAVE_ALLOCA_H
+#cmakedefine01 HAVE_MALLOC_H
+#cmakedefine01 HAVE_STRING_H
+#cmakedefine01 HAVE_SYS_STAT_H
+#cmakedefine01 HAVE_UNISTD_H
+
 #cmakedefine01 HAVE__STRDUP
+#cmakedefine01 HAVE_ALLOCA
+#cmakedefine01 HAVE_S_IFREG
+#cmakedefine01 HAVE_STAT
 #cmakedefine01 HAVE_STRDUP
+#cmakedefine01 HAVE_STRTOK_R
+#cmakedefine01 HAVE_STRTOK_S
+
+#if !HAVE_ALLOCA && _WIN32
+#  define alloca _alloca
+#endif
 
 #if HAVE__STRDUP
 #  define STRDUP _strdup
 #elif HAVE_STRDUP
 #  define STRDUP strdup
+#endif
+#if HAVE_STRTOK_R
+#  define STRTOK strtok_r
+#elif HAVE_STRTOK_S
+#  define STRTOK strtok_s
+#else
+#  error "No supported strtok_* function is available"
 #endif
 
 #endif /* _HAVE_PKG_CONFIG_H */
