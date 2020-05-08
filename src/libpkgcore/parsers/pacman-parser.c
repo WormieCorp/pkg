@@ -306,6 +306,7 @@ bool parse_short_remove_arguments(ArgumentsData *data, const char arg,
       break;
     case 'n':
       data->flag |= NO_SAVE_ARG;
+      break;
     default:
       return false;
   }
