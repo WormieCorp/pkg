@@ -148,6 +148,14 @@ char **choco_transform_arguments(const ArgumentsData *arguments)
       }
       break;
 
+    case LIST:
+    case SEARCH:
+      if (has_packages(arguments->unparsedArgs, arguments->unparsedArgsCount))
+        bufAr[curlen++] = STRDUP("search");
+      else
+        bufAr[curlen++] = STRDUP("list");
+      break;
+
     case UNINSTALL:
       bufAr[curlen++] = STRDUP("uninstall");
       if (!has_packages(arguments->unparsedArgs,

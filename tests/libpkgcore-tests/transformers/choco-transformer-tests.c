@@ -4,8 +4,8 @@
 
 #include <cmocka.h>
 
-#include "choco/info-tests.c"
 #include "choco/installation-tests.c"
+#include "choco/non-transaction-tests.c"
 #include "choco/uninstall-tests.c"
 #include "choco/upgrade-tests.c"
 
@@ -45,6 +45,11 @@ int main(void)
       cmocka_unit_test(should_set_info_and_help_arguments),
       cmocka_unit_test(should_set_info_and_package_arguments),
       cmocka_unit_test(should_set_info_and_local_only_arguments),
+
+      cmocka_unit_test(should_set_list_arguments),
+      cmocka_unit_test(should_set_list_and_local_only_arguments),
+      cmocka_unit_test(should_set_search_and_package_arguments),
+      cmocka_unit_test(should_set_search_and_local_only_arguments),
 
       cmocka_unit_test(should_set_install_and_help_arguments),
       cmocka_unit_test(should_set_install_and_package_arguments),
