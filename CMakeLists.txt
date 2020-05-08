@@ -34,9 +34,9 @@ if (NOT HAVE__STRDUP)
 endif()
 
 # Definitions for all sub projects
-add_definitions(-D_CRT_SECURE_NO_WARNINGS=1)
-add_definitions(-DUNICODE)
-add_definitions(-D_UNICODE)
+if (WIN32)
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS=1)
+endif(WIN32)
 
 # Include directories fol all sub projects
 include_directories(${CMAKE_CURRENT_BINARY_DIR})

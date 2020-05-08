@@ -60,6 +60,16 @@ void add_install_upgrade_arguments(char **buffer, size_t *bufcurlen,
     buffer[(*bufcurlen)++] = STRDUP("--no-progress");
 }
 
+void add_non_transaction_arguments(char **buffer, size_t *bufcurlen,
+                                   const ArgumentsData *data)
+{
+  if (data->action < LIST)
+    return;
+
+  if (data->flag & LOCALONLY_ARG)
+    buffer[(*bufcurlen)++] = STRDUP("--local-only");
+}
+
 void add_transaction_arguments(char **buffer, size_t *bufcurlen,
                                const ArgumentsData *data)
 {
@@ -111,12 +121,11 @@ char **choco_transform_arguments(const ArgumentsData *arguments)
   size_t curlen = 0;
   char **bufAr  = malloc(len * sizeof(char *));
 
-#define TRANSFORMERS 4
+#define TRANSFORMERS 5
   static void (*transforms[TRANSFORMERS])(char **, size_t *,
                                           const ArgumentsData *) = {
-      add_common_arguments,
-      add_transaction_arguments,
-      add_install_upgrade_arguments,
+      add_common_arguments,          add_transaction_arguments,
+      add_non_transaction_arguments, add_install_upgrade_arguments,
       add_remove_arguments,
   };
 
@@ -133,7 +142,7 @@ char **choco_transform_arguments(const ArgumentsData *arguments)
     case INSTALL:
       bufAr[curlen++] = STRDUP("install");
       if (!has_packages(arguments->unparsedArgs,
-                           arguments->unparsedArgsCount)) {
+                        arguments->unparsedArgsCount)) {
         bufAr[curlen++] = STRDUP("--help");
         goto end;
       }
@@ -142,7 +151,7 @@ char **choco_transform_arguments(const ArgumentsData *arguments)
     case UNINSTALL:
       bufAr[curlen++] = STRDUP("uninstall");
       if (!has_packages(arguments->unparsedArgs,
-                           arguments->unparsedArgsCount)) {
+                        arguments->unparsedArgsCount)) {
         bufAr[curlen++] = STRDUP("--help");
         goto end;
       }

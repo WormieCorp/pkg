@@ -44,6 +44,8 @@ int main(void)
 
       cmocka_unit_test(should_set_info_and_help_arguments),
       cmocka_unit_test(should_set_info_and_package_arguments),
+      cmocka_unit_test(should_set_info_and_local_only_arguments),
+
       cmocka_unit_test(should_set_install_and_help_arguments),
       cmocka_unit_test(should_set_install_and_package_arguments),
       cmocka_unit_test(should_set_install_and_non_package_arguments),
