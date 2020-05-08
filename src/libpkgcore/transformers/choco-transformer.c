@@ -85,6 +85,8 @@ void add_remove_arguments(char **buffer, size_t *bufcurlen,
         "packages,\nand is a dependency on specified packages to remove!\n");
     buffer[(*bufcurlen)++] = STRDUP("--remove-dependencies");
   }
+  if (data->flag & UNNEEDED_ARG)
+    buffer[(*bufcurlen)++] = STRDUP("--remove-dependencies");
 }
 
 char **choco_transform_arguments(const ArgumentsData *arguments)
