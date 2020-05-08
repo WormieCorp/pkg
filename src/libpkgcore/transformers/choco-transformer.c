@@ -72,6 +72,21 @@ void add_transaction_arguments(char **buffer, size_t *bufcurlen,
   }
 }
 
+void add_remove_arguments(char **buffer, size_t *bufcurlen,
+                          const ArgumentsData *data)
+{
+  if (data->action != UNINSTALL)
+    return;
+
+  if (data->flag & RECURSE_ARG) {
+    log_warning(
+        "Chocolatey do not store explicitly installed packages.\nSwitching to "
+        "removing unneeded packages (packages not referenced by other "
+        "packages,\nand is a dependency on specified packages to remove!\n");
+    buffer[(*bufcurlen)++] = STRDUP("--remove-dependencies");
+  }
+}
+
 char **choco_transform_arguments(const ArgumentsData *arguments)
 {
   /*printf("Using transformer: "
@@ -94,12 +109,13 @@ char **choco_transform_arguments(const ArgumentsData *arguments)
   size_t curlen = 0;
   char **bufAr  = malloc(len * sizeof(char *));
 
-#define TRANSFORMERS 3
+#define TRANSFORMERS 4
   static void (*transforms[TRANSFORMERS])(char **, size_t *,
                                           const ArgumentsData *) = {
       add_common_arguments,
       add_transaction_arguments,
       add_install_upgrade_arguments,
+      add_remove_arguments,
   };
 
   switch (arguments->action) {

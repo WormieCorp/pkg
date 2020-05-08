@@ -172,6 +172,7 @@ void should_set_uninstall_and_without_no_progress_arguments(void **state)
   char *expected[] = {
       "uninstall",
       "pkg",
+      NULL,
   };
   ArgumentsData data = {
       .action            = UNINSTALL,
@@ -184,4 +185,26 @@ void should_set_uninstall_and_without_no_progress_arguments(void **state)
 
   char **actual = choco_transform_arguments(&data);
   compare_helper(expected, 2, actual);
+}
+
+void should_set_uninstall_and_remove_dependencies_on_recurse(void **state)
+{
+  (void)state;
+  char *expected[] = {
+      "uninstall",
+      "pkg",
+      "--remove-dependencies",
+      NULL,
+  };
+  ArgumentsData data = {
+      .action            = UNINSTALL,
+      .flag              = RECURSE_ARG,
+      .confirm           = true,
+      .unparsedArgsCount = 1,
+  };
+  data.unparsedArgs    = alloca(sizeof(char *));
+  data.unparsedArgs[0] = expected[1];
+
+  char **actual = choco_transform_arguments(&data);
+  compare_helper(expected, 3, actual);
 }

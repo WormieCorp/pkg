@@ -61,6 +61,7 @@ int main(void)
       cmocka_unit_test(
           should_set_uninstall_yes_and_without_allow_license_arguments),
       cmocka_unit_test(should_set_uninstall_and_without_no_progress_arguments),
+      cmocka_unit_test(should_set_uninstall_and_remove_dependencies_on_recurse),
 
       cmocka_unit_test(should_set_upgrade_all_when_upgrade_and_no_unparsed),
       cmocka_unit_test(should_set_upgrade_with_package_arguments),
