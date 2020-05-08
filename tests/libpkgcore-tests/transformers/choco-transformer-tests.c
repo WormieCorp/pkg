@@ -5,6 +5,7 @@
 #include <cmocka.h>
 
 #include "choco/installation-tests.c"
+#include "choco/uninstall-tests.c"
 #include "choco/upgrade-tests.c"
 
 void should_set_help_argument_on_no_action(void **state)
@@ -36,6 +37,18 @@ int main(void)
       cmocka_unit_test(should_set_install_verbose_and_debug_arguments),
       cmocka_unit_test(should_set_install_yes_and_allow_license_arguments),
       cmocka_unit_test(should_set_install_and_no_progress_arguments),
+
+      cmocka_unit_test(should_set_uninstall_and_help_arguments),
+      cmocka_unit_test(should_set_uninstall_and_package_arguments),
+      cmocka_unit_test(should_set_uninstall_and_non_package_arguments),
+      cmocka_unit_test(should_set_uninstall_without_nodependencies_arguments),
+      cmocka_unit_test(should_set_uninstall_and_verbose_arguments),
+      cmocka_unit_test(should_set_uninstall_and_debug_arguments),
+      cmocka_unit_test(should_set_uninstall_verbose_and_debug_arguments),
+      cmocka_unit_test(
+          should_set_uninstall_yes_and_without_allow_license_arguments),
+      cmocka_unit_test(should_set_uninstall_and_without_no_progress_arguments),
+
       cmocka_unit_test(should_set_upgrade_all_when_upgrade_and_no_unparsed),
       cmocka_unit_test(should_set_upgrade_with_package_arguments),
       cmocka_unit_test(should_set_upgrade_all_when_upgrade_and_no_unparsed),

@@ -37,6 +37,41 @@ void add_non_package_arguments(char **buffer, size_t *bufcurlen,
   }
 }
 
+void add_common_arguments(char **buffer, size_t *bufcurlen,
+                          const ArgumentsData *data)
+{
+  if (data->flag & VERBOSE_ARG)
+    buffer[(*bufcurlen)++] = STRDUP("--verbose");
+  if (data->flag & DEBUG_ARG)
+    buffer[(*bufcurlen)++] = STRDUP("--debug");
+}
+
+void add_install_upgrade_arguments(char **buffer, size_t *bufcurlen,
+                                   const ArgumentsData *data)
+{
+  if (data->action != INSTALL && data->action != UPGRADE)
+    return;
+
+  if (!data->confirm)
+    buffer[(*bufcurlen)++] = STRDUP("--accept-license");
+  if (data->flag & NODEP_ARG)
+    buffer[(*bufcurlen)++] = STRDUP("--ignore-dependencies");
+  if ((data->flag & HIDE_PROGRESS_ARG))
+    buffer[(*bufcurlen)++] = STRDUP("--no-progress");
+}
+
+void add_transaction_arguments(char **buffer, size_t *bufcurlen,
+                               const ArgumentsData *data)
+{
+  if (data->action < INSTALL && data->action > UPGRADE)
+    // Do not do anything if action isn't install, upgrade or uninstall
+    return;
+
+  if (!data->confirm) {
+    buffer[(*bufcurlen)++] = STRDUP("--yes");
+  }
+}
+
 char **choco_transform_arguments(const ArgumentsData *arguments)
 {
   /*printf("Using transformer: "
@@ -54,9 +89,27 @@ char **choco_transform_arguments(const ArgumentsData *arguments)
   size_t curlen = 0;
   char **bufAr  = malloc(len * sizeof(char *));
 
+#define TRANSFORMERS 3
+  static void (*transforms[TRANSFORMERS])(char **, size_t *,
+                                          const ArgumentsData *) = {
+      add_common_arguments,
+      add_transaction_arguments,
+      add_install_upgrade_arguments,
+  };
+
   switch (arguments->action) {
     case INSTALL:
       bufAr[curlen++] = STRDUP("install");
+      if (!(arguments->flag & HELP_ARG)
+          && !has_packages(arguments->unparsedArgs,
+                           arguments->unparsedArgsCount)) {
+        bufAr[curlen++] = STRDUP("--help");
+        goto end;
+      }
+      break;
+
+    case UNINSTALL:
+      bufAr[curlen++] = STRDUP("uninstall");
       if (!(arguments->flag & HELP_ARG)
           && !has_packages(arguments->unparsedArgs,
                            arguments->unparsedArgsCount)) {
@@ -89,25 +142,8 @@ char **choco_transform_arguments(const ArgumentsData *arguments)
   add_packages(bufAr, &curlen, arguments->unparsedArgs,
                arguments->unparsedArgsCount);
 
-  if (!arguments->confirm) { // The chocolatey argument confirm is opposite to
-                             // other pkg managers
-    bufAr[curlen++] = STRDUP("--yes");
-    // Not needed really, as --yes implies --accept-license as well. But used in
-    // case something changes in the future
-    bufAr[curlen++] = STRDUP("--accept-license");
-  }
-
-  if (arguments->flag & NODEP_ARG)
-    bufAr[curlen++] = STRDUP("--ignore-dependencies");
-
-  if (arguments->flag & HIDE_PROGRESS_ARG)
-    bufAr[curlen++] = STRDUP("--no-progress");
-
-  if (arguments->flag & VERBOSE_ARG)
-    bufAr[curlen++] = STRDUP("--verbose");
-
-  if (arguments->flag & DEBUG_ARG)
-    bufAr[curlen++] = STRDUP("--debug");
+  for (int i = 0; i < TRANSFORMERS; ++i)
+    transforms[i](bufAr, &curlen, arguments);
 
   add_non_package_arguments(bufAr, &curlen, arguments->unparsedArgs,
                             arguments->unparsedArgsCount);
