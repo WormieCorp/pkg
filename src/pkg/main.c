@@ -1,7 +1,7 @@
-#include <launchers/launchers.h>
 #include <logging.h>
 #include <malloc.h>
 #include <parsers/parsers.h>
+#include <resolver.h>
 #include <stdio.h>
 #include <transformers/choco-transformer.h>
 
