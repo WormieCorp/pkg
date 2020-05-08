@@ -83,6 +83,11 @@ char **choco_transform_arguments(const ArgumentsData *arguments)
     bufAr[0]     = STRDUP("--help");
     bufAr[1]     = NULL;
     return bufAr;
+  } else if ((arguments->flag & LOCALONLY_ARG)
+             && (arguments->flag & REFRESH_ARG)) {
+    log_error("Local Only and refresh only is used.\n");
+    log_error("This is not a valid transaction. Exiting...\n");
+    return NULL;
   }
 
   size_t len    = 10 + arguments->unparsedArgsCount;

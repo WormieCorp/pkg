@@ -24,10 +24,23 @@ void should_set_help_argument_on_no_action(void **state)
   compare_helper(expected, 1, actual);
 }
 
+void should_return_null_when_localonly_and_refresh_is_used(void **state)
+{
+  (void)state;
+  ArgumentsData data = {
+      .flag = LOCALONLY_ARG | REFRESH_ARG,
+  };
+
+  char **actual = choco_transform_arguments(&data);
+  assert_null(actual);
+}
+
 int main(void)
 {
   const struct CMUnitTest parser_tests[] = {
       cmocka_unit_test(should_set_help_argument_on_no_action),
+      cmocka_unit_test(should_return_null_when_localonly_and_refresh_is_used),
+
       cmocka_unit_test(should_set_install_and_help_arguments),
       cmocka_unit_test(should_set_install_and_package_arguments),
       cmocka_unit_test(should_set_install_and_non_package_arguments),
