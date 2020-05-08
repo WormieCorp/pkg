@@ -121,10 +121,18 @@ char **choco_transform_arguments(const ArgumentsData *arguments)
   };
 
   switch (arguments->action) {
+    case INFO:
+      bufAr[curlen++] = STRDUP("info");
+      if (!has_packages(arguments->unparsedArgs,
+                        arguments->unparsedArgsCount)) {
+        bufAr[curlen++] = STRDUP("--help");
+        goto end;
+      }
+      break;
+
     case INSTALL:
       bufAr[curlen++] = STRDUP("install");
-      if (!(arguments->flag & HELP_ARG)
-          && !has_packages(arguments->unparsedArgs,
+      if (!has_packages(arguments->unparsedArgs,
                            arguments->unparsedArgsCount)) {
         bufAr[curlen++] = STRDUP("--help");
         goto end;
@@ -133,8 +141,7 @@ char **choco_transform_arguments(const ArgumentsData *arguments)
 
     case UNINSTALL:
       bufAr[curlen++] = STRDUP("uninstall");
-      if (!(arguments->flag & HELP_ARG)
-          && !has_packages(arguments->unparsedArgs,
+      if (!has_packages(arguments->unparsedArgs,
                            arguments->unparsedArgsCount)) {
         bufAr[curlen++] = STRDUP("--help");
         goto end;
@@ -143,9 +150,7 @@ char **choco_transform_arguments(const ArgumentsData *arguments)
 
     case UPGRADE:
       bufAr[curlen++] = STRDUP("upgrade");
-      if (!(arguments->flag & HELP_ARG)
-          && !has_packages(arguments->unparsedArgs,
-                           arguments->unparsedArgsCount))
+      if (!has_packages(arguments->unparsedArgs, arguments->unparsedArgsCount))
         bufAr[curlen++] = STRDUP("all");
       break;
 
