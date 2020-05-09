@@ -2,11 +2,15 @@ set(C_SOURCES
   logging.c
   pkg-data.c
   resolver.c
-  launchers/launchers.c
+  launchers/launcher.c
   parsers/pacman-parser.c
   parsers/parsers.c
   transformers/choco-transformer.c
 )
+
+if (WIN32)
+  set(C_SOURCES ${C_SOURCES} launchers/launcher_windows.c)
+endif()
 
 include(generate_product_version)
 generate_product_version(

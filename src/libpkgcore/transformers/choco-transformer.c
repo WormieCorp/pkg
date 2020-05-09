@@ -92,7 +92,7 @@ void add_remove_arguments(char **buffer, size_t *bufcurlen,
     log_warning(
         "Chocolatey do not store explicitly installed packages.\nSwitching to "
         "removing unneeded packages (packages not referenced by other "
-        "packages,\nand is a dependency on specified packages to remove!\n");
+        "packages),\nand is a dependency on specified packages to remove!\n");
     buffer[(*bufcurlen)++] = STRDUP("--remove-dependencies");
   }
   if (data->flag & UNNEEDED_ARG)
