@@ -119,7 +119,9 @@ bool parse_long_sync_arguments(ArgumentsData *data, const char *argument,
     data->action = INFO;
     return true;
   }
-  if (strcmp(argument, "list") == 0) {
+  if ((data->flag & LOCALONLY_ARG) != LOCALONLY_ARG
+      && strcmp(argument, "list") == 0) {
+    // If list is used on local, then it means to list files, not packages
     data->action = LIST;
     return true;
   }
@@ -199,6 +201,7 @@ bool parse_short_operator_arguments(ArgumentsData *data, const char arg,
   switch (arg) {
     case 'Q':
       data->flag |= LOCALONLY_ARG;
+      data->flag |= LIST;
       break;
 
     case 'R':
@@ -267,6 +270,10 @@ bool parse_short_sync_arguments(ArgumentsData *data, const char arg,
       data->action = INFO;
       break;
     case 'l':
+      if ((data->flag & LOCALONLY_ARG) == LOCALONLY_ARG)
+        return false;
+      // We only set list when not local only, due otherwise it would mean to
+      // list installed files
       data->action = LIST;
       break;
     case 'q': // Not sure about this one, but we will ignore it anyhow
@@ -278,8 +285,9 @@ bool parse_short_sync_arguments(ArgumentsData *data, const char arg,
       data->action = UPGRADE;
       break;
     case 'y':
-      if ((data->flag & LOCALONLY_ARG) != LOCALONLY_ARG)
-        data->flag |= REFRESH_ARG;
+      if ((data->flag & LOCALONLY_ARG) == LOCALONLY_ARG)
+        return false;
+      data->flag |= REFRESH_ARG;
       break;
 
     default:
