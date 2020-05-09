@@ -201,7 +201,7 @@ bool parse_short_operator_arguments(ArgumentsData *data, const char arg,
   switch (arg) {
     case 'Q':
       data->flag |= LOCALONLY_ARG;
-      data->flag |= LIST;
+      data->action = LIST;
       break;
 
     case 'R':

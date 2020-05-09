@@ -1,7 +1,7 @@
 #include <cmocka.h>
 #include <parsers/parsers.h>
 
-void should_set_localonly_as_true(void **state)
+void should_set_list_action_and_localonly_flag(void **state)
 {
   (void)state;
   int argc     = 2;
@@ -13,7 +13,7 @@ void should_set_localonly_as_true(void **state)
   ArgumentsData *data = pacman_parse_arguments(argc, argv);
 
   assert_non_null(data);
-  assert_int_equal(data->action, NO_ACTION);
+  assert_int_equal(data->action, LIST);
   assert_int_equal(data->flag, LOCALONLY_ARG);
   release_arguments_data(data);
 }
@@ -65,7 +65,7 @@ void should_not_set_upgrade_action_with_sync_long_option(void **state)
   ArgumentsData *data = pacman_parse_arguments(argc, argv);
 
   assert_non_null(data);
-  assert_int_equal(data->action, NO_ACTION);
+  assert_int_equal(data->action, LIST);
   assert_int_equal(data->flag, LOCALONLY_ARG);
   assert_int_equal(data->unparsedArgsCount, 1);
   assert_string_equal(data->unparsedArgs[0], argv[1]);
@@ -81,7 +81,7 @@ void should_not_set_refresh_flag_when_local_only(void **state)
   ArgumentsData *data = pacman_parse_arguments(argc, argv);
 
   assert_non_null(data);
-  assert_int_equal(data->action, NO_ACTION);
+  assert_int_equal(data->action, LIST);
   assert_int_equal(data->flag, LOCALONLY_ARG);
   release_arguments_data(data);
 }
@@ -98,7 +98,7 @@ void should_not_set_refresh_flag_when_local_only_long(void **state)
   ArgumentsData *data = pacman_parse_arguments(argc, argv);
 
   assert_non_null(data);
-  assert_int_equal(data->action, NO_ACTION);
+  assert_int_equal(data->action, LIST);
   assert_int_equal(data->flag, LOCALONLY_ARG);
   release_arguments_data(data);
 }
@@ -140,43 +140,6 @@ void should_set_info_action_with_localonly_flag_long(void **state)
   assert_int_equal(data->action, INFO);
   assert_int_equal(data->flag, LOCALONLY_ARG);
   assert_int_equal(data->unparsedArgsCount, 1);
-
-  release_arguments_data(data);
-}
-
-void should_set_list_action_with_localonly_flag(void **state)
-{
-  (void)state;
-  (void)state;
-  int argc     = 1;
-  char *argv[] = {"-Ql"};
-
-  ArgumentsData *data = pacman_parse_arguments(argc, argv);
-
-  assert_non_null(data);
-  assert_int_equal(data->action, LIST);
-  assert_int_equal(data->flag, LOCALONLY_ARG);
-  assert_int_equal(data->unparsedArgsCount, 0);
-
-  release_arguments_data(data);
-}
-
-void should_set_list_action_with_localonly_flag_long(void **state)
-{
-  (void)state;
-  (void)state;
-  int argc     = 2;
-  char *argv[] = {
-      "-Q",
-      "--list",
-  };
-
-  ArgumentsData *data = pacman_parse_arguments(argc, argv);
-
-  assert_non_null(data);
-  assert_int_equal(data->action, LIST);
-  assert_int_equal(data->flag, LOCALONLY_ARG);
-  assert_int_equal(data->unparsedArgsCount, 0);
 
   release_arguments_data(data);
 }
