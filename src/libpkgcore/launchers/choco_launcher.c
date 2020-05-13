@@ -25,11 +25,9 @@ bool choco_launch_program(const ArgumentsData *data)
     bool elevate =
         compare_helper(arguments[0], 3, "install", "uninstall", "upgrade");
     int i = -1;
-    while (arguments[++i]) {
-      if (compare_helper(arguments[i], 2, "-h", "--help")) {
+    while (elevate && arguments[++i]) {
+      if (compare_helper(arguments[i], 2, "-h", "--help"))
         elevate = false;
-        break;
-      }
     }
 
     launch_program(program, arguments, elevate);
