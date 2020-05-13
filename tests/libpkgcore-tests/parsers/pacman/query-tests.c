@@ -1,5 +1,5 @@
 #include <cmocka.h>
-#include <parsers/parsers.h>
+#include <parsers/pacman-parser.h>
 
 void should_set_list_action_and_localonly_flag(void **state)
 {

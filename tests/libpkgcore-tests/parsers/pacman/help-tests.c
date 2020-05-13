@@ -1,5 +1,5 @@
 #include <cmocka.h>
-#include <parsers/parsers.h>
+#include <parsers/pacman-parser.h>
 
 void should_set_help_flag_on_no_action(void **state)
 {

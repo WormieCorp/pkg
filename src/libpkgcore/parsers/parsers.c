@@ -1,4 +1,5 @@
 #include "parsers.h"
+#include "pacman-parser.h"
 #include <stddef.h>
 
 #define PARSERS_COUNT 1
