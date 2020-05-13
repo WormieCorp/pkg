@@ -2,6 +2,7 @@ set(C_SOURCES
   logging.c
   pkg-data.c
   resolver.c
+  launchers/choco_launcher.c
   launchers/launcher.c
   parsers/pacman-parser.c
   parsers/parsers.c
@@ -10,6 +11,8 @@ set(C_SOURCES
 
 if (WIN32)
   set(C_SOURCES ${C_SOURCES} launchers/launcher_windows.c)
+else()
+  set(C_SOURCES ${C_SOURCES} launchers/launcher_dummy.c)
 endif()
 
 include(generate_product_version)
@@ -23,7 +26,9 @@ generate_product_version(
 add_library(pkgcore ${C_SOURCES})
 include(GenerateExportHeader)
 generate_export_header(pkgcore)
-target_include_directories(pkgcore PUBLIC "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(pkgcore PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 if (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   target_compile_options(pkgcore PRIVATE -Wno-incompatible-pointer-types)
 endif()

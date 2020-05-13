@@ -9,7 +9,7 @@
 #include <windows.h>
 
 size_t get_total_length(const char **arguments);
-void combine_to_string(TCHAR *buffer, const char **arguments);
+PKGCORE_EXPORT void combine_to_string(TCHAR *buffer, const char **arguments);
 bool is_elevated(void);
 void create_as_process(TCHAR *path, TCHAR *arguments);
 void launch_elevated(TCHAR *path, TCHAR *arguments);
@@ -62,8 +62,6 @@ void create_as_process(TCHAR *path, TCHAR *arguments)
 
 void launch_elevated(TCHAR *path, TCHAR *arguments)
 {
-  _tcprintf("Launching '%s%s' in elevated prompt.\n", path, arguments);
-
   SHELLEXECUTEINFO ShExecInfo = {0};
   ShExecInfo.cbSize           = sizeof(SHELLEXECUTEINFO);
   ShExecInfo.fMask            = SEE_MASK_NOCLOSEPROCESS;
@@ -110,6 +108,8 @@ void combine_to_string(TCHAR *buffer, const char **arguments)
   while (*(arguments + ++i)) {
     const char *arg = *(arguments + i);
     _tcscat(buffer, _T(" "));
+    if (strchr(arg, ' '))
+      _tcscat(buffer, _T("\""));
 #if _UNICODE
     size_t len = strlen(*(arguments + i)) + 1;
     TCHAR *buf = alloca(len * sizeof(TCHAR));
@@ -117,6 +117,8 @@ void combine_to_string(TCHAR *buffer, const char **arguments)
     _tcscat(buffer, buf);
 #else
     _tcscat(buffer, arg);
+    if (strchr(arg, ' '))
+      _tcscat(buffer, _T("\""));
 #endif
   }
 }
