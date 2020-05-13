@@ -1,11 +1,13 @@
 add_executable(launcher-tests launchers/launcher-tests.c)
 add_executable(pacman-parser-tests parsers/pacman-parser-tests.c)
 add_executable(choco-transformer-tests transformers/choco-transformer-tests.c)
+add_executable(utilities-tests utilities-tests.c)
 
 set(_all_test_targets
   launcher-tests
   pacman-parser-tests
   choco-transformer-tests
+  utilities-tests
 )
 
 foreach(_test_target ${_all_test_targets})
