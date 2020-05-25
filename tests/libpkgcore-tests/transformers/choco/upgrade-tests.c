@@ -86,8 +86,8 @@ void should_set_upgrade_with_package_and_non_package_arguments(void **state)
       .unparsedArgsCount = 2,
   };
   data.unparsedArgs    = alloca(2 * sizeof(char *));
-  data.unparsedArgs[0] = expected[2];
-  data.unparsedArgs[1] = expected[1];
+  data.unparsedArgs[0] = expected[1];
+  data.unparsedArgs[1] = expected[2];
 
   char **actual = choco_transform_arguments(&data);
 

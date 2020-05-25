@@ -1,12 +1,7 @@
 #include <launchers/choco_launcher.h>
-#include <launchers/launcher.h>
 #include <logging.h>
-#include <malloc.h>
 #include <parsers/parsers.h>
-#include <resolver.h>
 #include <stdio.h>
-#include <string.h>
-#include <transformers/choco-transformer.h>
 
 int main(int argc, char **argv)
 {

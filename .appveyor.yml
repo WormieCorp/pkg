@@ -1,0 +1,49 @@
+version: 0.1.0.{build}
+pull_requests:
+  do_not_increment_build_number: true
+skip_branch_with_pr: true
+environment:
+  matrix:
+    - appveyor_build_worker_image: Visual Studio 2019
+      PLATFORM: Win32
+    - appveyor_build_worker_image: Visual Studio 2019
+      PLATFORM: x64
+    - appveyor_build_worker_image: Ubuntu
+      GENERATORS: TGZ;STGZ
+    - appveyor_build_worker_image: macOS
+      GENERATORS: TGZ;productbuild
+configuration: Release
+
+install:
+  - cmd: |
+      dotnet tool install -g GitVersion.Tool --version 5.3.4
+      dotnet gitversion /output buildserver
+before_build:
+  - pwsh: echo "$env:APPVEYOR_BUILD_VERSION" > version.info
+build_script:
+  - cmd: cmake -S "%APPVEYOR_BUILD_FOLDER%" -B "%APPVEYOR_BUILD_FOLDER%/.build" -DCPACK_GENERATOR="7Z;ZIP" -A %PLATFORM% -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W4"
+  - sh: cmake -S "$APPVEYOR_BUILD_FOLDER" -B "$APPVEYOR_BUILD_FOLDER/.build" -DCPACK_GENERATOR="$GENERATORS" -DCPACK_SOURCE_GENERATOR="TGZ;ZIP" -DCMAKE_BUILD_TYPE=$CONFIGURATION -DCMAKE_C_FLAGS="-Wall -Wextra"
+  - cmd: cmake --build "%APPVEYOR_BUILD_FOLDER%/.build" --config %CONFIGURATION% -j 4
+  - sh: cd "$APPVEYOR_BUILD_FOLDER/.build" && make -j4
+test_script:
+  - cmd: |
+      cd "%APPVEYOR_BUILD_FOLDER%\.build"
+      ctest -C %CONFIGURATION%
+      cmake --build . --config %CONFIGURATION% --target package
+  - sh: |
+      cd "$APPVEYOR_BUILD_FOLDER/.build"
+      make test
+      make package/fast && make package_source
+
+deploy_script:
+  - ps: echo "Hello PowerShell"
+  - pwsh: echo "Hello PowerShell Core"
+  - cmd: echo "Hello CMD"
+  - sh: echo "Hello ShellScript"
+
+artifacts:
+  - path: .build/*.7z
+  - path: .build/*.sh
+  - path: .build/*.tar.gz
+  - path: .build/*.zip
+  - path: .build/*.pkg

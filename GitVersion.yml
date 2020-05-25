@@ -1,0 +1,12 @@
+mode: ContinuousDelivery
+branches: {}
+ignore:
+  sha: []
+merge-message-formats: {}
+# major-version-bump-message: "BREAKING CHANGE:"
+# minor-version-bump-message: '^feat\(.*\)?:'
+# patch-version-bump-message: '^fix\(.*\)?:'
+branches: {}
+ignore:
+  sha: []
+merge-message-formats: {}

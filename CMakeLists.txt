@@ -5,6 +5,12 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules;${CMAKE_MODULE_
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/version.info")
+  file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/version.info" _VERSION)
+else()
+  set(_VERSION 0.1.0)
+endif()
+
 if (CMAKE_VERSION VERSION_LESS "3.11.0")
   project(pkg VERSION 0.1.0 LANGUAGES C CXX) # We must have CXX enabled on older cmake versions
 else()
@@ -45,6 +51,8 @@ if (HAVE_ALLOCA_H)
   check_symbol_exists(alloca "alloca.h" HAVE_ALLOCA)
 elseif(HAVE_MALLOC_H)
   check_symbol_exists(alloca "malloc.h" HAVE_ALLOCA)
+else()
+  check_symbol_exists(alloca "stdlib.h" HAVE_ALLOCA)
 endif()
 if (NOT HAVE__STRDUP)
   check_symbol_exists(strdup "string.h" HAVE_STRDUP)
@@ -64,3 +72,10 @@ if (BUILD_TESTING)
 endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+
+if (WIN32)
+  set(CPACK_BINARY_NSIS OFF)
+  set(CPACK_BINARY_7Z ON)
+endif()
+
+include(CPack)

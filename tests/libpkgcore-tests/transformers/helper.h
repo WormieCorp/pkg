@@ -1,9 +1,15 @@
 #ifndef _HAVE_TESTS_HELPER_H
 #define _HAVE_TESTS_HELPER_H
 
+#include "config.h"
 #include <cmocka.h>
-#include <malloc.h>
 #include <pkg-data.h>
+#if HAVE_MALLOC_H
+#  include <malloc.h>
+#else
+// We will assume that free is in stdlib
+#  include <stdlib.h>
+#endif
 
 void add_unparsed_packages(const char **expected, ArgumentsData *data)
 {

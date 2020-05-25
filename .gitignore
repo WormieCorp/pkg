@@ -103,3 +103,6 @@ $RECYCLE.BIN/
 .nfs*
 
 tools/
+node_modules/
+*.lock
+package.json

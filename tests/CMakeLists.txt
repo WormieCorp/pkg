@@ -3,12 +3,6 @@ ExternalProject_Add(cmocka_ep
     URL "https://cmocka.org/files/1.1/cmocka-1.1.5.tar.xz"
     URL_HASH "SHA512=CAD7F04757183D004F6EAAD39036FC0E24C5E0E987F80E85BC43BC66DBA22389CB02B08E25531CC28A541D0A24A86B29BE134A2D6FC339128E87D66952F502BD"
     SOURCE_DIR "${CMAKE_BINARY_DIR}/third-party/cmocka"
-    #URL https://git.cryptomilk.org/projects/cmocka.git/snapshot/cmocka-1.0.1.tar.xz
-    #URL_HASH SHA256=b3831d1ced5423890fcca347b40fbeda5b0903fc0296596abf0f68013c9eafdc
-    #GIT_REPOSITORY git://git.cryptomilk.org/projects/cmocka.git
-    #GIT_TAG cmocka-1.0.1
-    # Use git submodule to fetch source manually and in-tree, store in SOURCE_DIR
-    #SOURCE_DIR ${CMAKE_SOURCE_DIR}/modules/cmocka
     CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
                -DCMAKE_SYSTEM_NAME=${CMAKE_SYSTEM_NAME}
                -DWITH_STATIC_LIB=ON
@@ -17,6 +11,10 @@ ExternalProject_Add(cmocka_ep
                -DUNIT_TESTING=FALSE
                -DWITH_EXAMPLES=FALSE
                -DPICKY_DEVELOPER=TRUE
+               -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+               -DHAVE_MALLOC_H=${HAVE_MALLOC_H}
+               -DHAVE_STRING_H=${HAVE_STRING_H}
+               -DHAVE_SYS_STAT_H=${HAVE_SYS_STAT_H}
 
     # Don't build unused examples and disable install step
     BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --config $<CONFIG> --target cmocka-static

@@ -16,7 +16,7 @@ void should_return_length_of_single_item(void **state)
 {
   (void)state;
   const char *t[] = {"This is a test array", NULL};
-  size_t expected = strlen(t[0]) + 2;
+  size_t expected = strlen(t[0]) + 4; // To allow for additional spaces
 
   size_t actual = get_total_length(t);
 
@@ -32,7 +32,7 @@ void should_return_length_of_multiple_items(void **state)
       "And what is this?",
       NULL,
   };
-  size_t expected = strlen(t[0]) + strlen(t[1]) + strlen(t[2]) + 4;
+  size_t expected = strlen(t[0]) + strlen(t[1]) + strlen(t[2]) + 4 + (3 * 2);
 
   size_t actual = get_total_length(t);
 
@@ -50,8 +50,9 @@ void should_concat_string_array(void **state)
       "a string",
       NULL,
   };
-  const TCHAR *expected = _T(" This is a string"); // We need a leading space
-  TCHAR actual[1000]    = _T("");
+  const TCHAR *expected =
+      _T(" \"This is\" \"a string\""); // We need a leading space
+  TCHAR actual[1000] = _T("");
 
   combine_to_string(actual, t);
 
