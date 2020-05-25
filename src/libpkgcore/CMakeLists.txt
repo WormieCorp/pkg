@@ -32,3 +32,9 @@ target_include_directories(pkgcore PUBLIC
 if (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   target_compile_options(pkgcore PRIVATE -Wno-incompatible-pointer-types)
 endif()
+
+if (BUILD_SHARED_LIBS)
+  install(TARGETS pkgcore
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+endif()

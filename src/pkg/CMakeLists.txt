@@ -14,3 +14,6 @@ target_link_libraries(pkg PUBLIC pkgcore)
 if (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   target_compile_options(pkg PRIVATE -Wno-incompatible-pointer-types)
 endif()
+
+install(TARGETS pkg
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
