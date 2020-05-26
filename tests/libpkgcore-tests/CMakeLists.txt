@@ -1,4 +1,5 @@
 set(_all_test_targets
+  choco-parser-tests
   choco-transformer-tests
   launcher-tests
   pacman-parser-tests

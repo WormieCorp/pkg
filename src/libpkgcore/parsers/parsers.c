@@ -1,5 +1,6 @@
 #include "parsers.h"
 #include "../utilities.h"
+#include "choco-parser.h"
 #include "config.h"
 #include "pacman-parser.h"
 #include <stdbool.h>
@@ -51,6 +52,9 @@ bool execute_short_parsing(char *arg, ArgumentsData *data,
       if (*pos == *argPos) {
         found = true;
         update_arguments_data(data, parserData);
+        if (parserData->abort) {
+          return false;
+        }
         break;
       }
 
@@ -99,7 +103,6 @@ bool execute_parsing(ArgumentsData *data, const struct ParserData parserData[],
         update_arguments_data(data, &parserData[j]);
         unparsed       = false;
         argumentsFound = true;
-        break;
       } else if (*argument != '-' || *(argument + 1) == '-') {
         continue;
       } else if (*argument == '-' && *(argument + 1) != '-') {
@@ -107,8 +110,14 @@ bool execute_parsing(ArgumentsData *data, const struct ParserData parserData[],
         unparsed = execute_short_parsing(argument, data, &parserData[j]);
         if (!argumentsFound && strcmp(argument, argv[i]))
           argumentsFound = true;
-        if (!unparsed)
-          break;
+      }
+
+      if (!unparsed) {
+        if (parserData[j].abort) {
+          free(argument);
+          return argumentsFound;
+        }
+        break;
       }
     }
 
@@ -124,6 +133,7 @@ bool execute_parsing(ArgumentsData *data, const struct ParserData parserData[],
 ArgumentsData *parse_arguments(int argc, char **argv)
 {
   ArgumentsData *(*parsers[PARSERS_COUNT])(int, char **) = {
+      choco_parse_arguments,
       pacman_parse_arguments,
   };
 

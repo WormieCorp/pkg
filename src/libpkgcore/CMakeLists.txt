@@ -5,6 +5,7 @@ set(C_SOURCES
   utilities.c
   launchers/choco_launcher.c
   launchers/launcher.c
+  parsers/choco-parser.c
   parsers/pacman-parser.c
   parsers/parsers.c
   transformers/choco-transformer.c
