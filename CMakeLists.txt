@@ -20,6 +20,7 @@ set(CMAKE_PROJECT_DESCRIPTION "${_description}")
 set(PROJECT_DESCRIPTION "${_description}")
 set(CMAKE_HOMEPAGE_URL "https://github.com/WormieCorp/pkg")
 set(PROJECT_HOMEPAGE_URL "${CMAKE_HOMEPAGE_URL}")
+set(CMAKE_INSTALL_UCRT_LIBRARIES TRUE)
 
 # Custom include
 set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT Deps)
