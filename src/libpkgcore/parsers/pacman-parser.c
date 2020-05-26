@@ -30,8 +30,8 @@ ArgumentsData *pacman_parse_arguments(int argc, char **argv)
       release_arguments_data(data);
       return NULL;
     } else {
-      if (!add_unparsed_argument(data, argv[i] + offset,
-                                 &availableUnparsedSize)) {
+      if (!add_unparsed_pacman_argument(data, argv[i] + offset,
+                                        &availableUnparsedSize)) {
         release_arguments_data(data);
         return NULL;
       }
@@ -372,7 +372,7 @@ bool add_unparsed_char(ArgumentsData *arguments, const char arg,
   char *buf = malloc(3 * sizeof(char));
   snprintf(buf, 3, "-%c", arg);
 
-  bool result = add_unparsed_argument(arguments, buf, availableSize);
+  bool result = add_unparsed_pacman_argument(arguments, buf, availableSize);
   free(buf);
   return result;
 }
@@ -384,13 +384,13 @@ bool add_unparsed_long_argument(ArgumentsData *arguments, const char *arg,
   char *buf  = malloc(len * sizeof(char));
   snprintf(buf, len, "--%s", arg);
 
-  bool result = add_unparsed_argument(arguments, buf, availableSize);
+  bool result = add_unparsed_pacman_argument(arguments, buf, availableSize);
   free(buf);
   return result;
 }
 
-bool add_unparsed_argument(ArgumentsData *arguments, const char *arg,
-                           int *availableSize)
+bool add_unparsed_pacman_argument(ArgumentsData *arguments, const char *arg,
+                                  int *availableSize)
 {
   if (!reallocate_data(arguments, availableSize))
     return false;

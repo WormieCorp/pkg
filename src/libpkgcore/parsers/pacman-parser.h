@@ -5,9 +5,9 @@
 
 PKGCORE_EXPORT ArgumentsData *pacman_parse_arguments(int argc, char **argv);
 
-PKGCORE_NO_EXPORT bool add_unparsed_argument(ArgumentsData *arguments,
-                                             const char *arg,
-                                             int *availableSize);
+PKGCORE_NO_EXPORT bool add_unparsed_pacman_argument(ArgumentsData *arguments,
+                                                    const char *arg,
+                                                    int *availableSize);
 
 PKGCORE_NO_EXPORT bool add_unparsed_char(ArgumentsData *arguments,
                                          const char arg, int *availableSize);

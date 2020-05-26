@@ -18,8 +18,8 @@ bool has_packages(const char **arguments, int count)
   return false;
 }
 
-void add_unparsed_arguments(char **buffer, size_t *bufcurlen,
-                            const char **arguments, int argumentsCount)
+void add_unparsed_choco_arguments(char **buffer, size_t *bufcurlen,
+                                  const char **arguments, int argumentsCount)
 {
   for (int i = 0; i < argumentsCount; i++) {
     buffer[(*bufcurlen)++] = STRDUP(arguments[i]);
@@ -173,8 +173,8 @@ char **choco_transform_arguments(const ArgumentsData *arguments)
     goto end;
   }
 
-  add_unparsed_arguments(bufAr, &curlen, arguments->unparsedArgs,
-                         arguments->unparsedArgsCount);
+  add_unparsed_choco_arguments(bufAr, &curlen, arguments->unparsedArgs,
+                               arguments->unparsedArgsCount);
 
   for (int i = 0; i < TRANSFORMERS; ++i)
     transforms[i](bufAr, &curlen, arguments);
