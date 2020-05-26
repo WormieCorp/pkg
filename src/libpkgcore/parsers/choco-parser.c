@@ -10,6 +10,7 @@
 
 bool choco_parse_install_upgrade_arguments(ArgumentsData *data, int argc,
                                            char **argv);
+
 ArgumentsData *choco_parse_arguments(int argc, char **argv)
 {
   (void)argv;
@@ -32,6 +33,17 @@ ArgumentsData *choco_parse_arguments(int argc, char **argv)
       result = choco_parse_install_upgrade_arguments(data, argc - 1, argv + 1)
                || argc > 1;
       setHelpArg = !result && argc == 1;
+      break;
+    case 2:
+      data->action = UPGRADE;
+      result = choco_parse_install_upgrade_arguments(data, argc - 1, argv + 1)
+               || argc > 1;
+      setHelpArg = !result && argc == 1;
+      break;
+    case 6:
+    case 7:
+    case 8:
+      data->action = HELP_ARG;
       break;
     default:
       result = false;
@@ -94,7 +106,13 @@ bool choco_parse_install_upgrade_arguments(ArgumentsData *data, int argc,
           .type.flag  = NODEP_ARG,
           .unionType  = FLAG,
       },
-  };
+      {
+          // This item is just so the package 'all' won't be set as an unparsed
+          // argument
+          .longArgs    = "all",
+          .type.action = data->action,
+          .unionType   = ACTION,
+      }};
 
   return execute_parsing(data, parserData,
                          sizeof(parserData) / sizeof(struct ParserData), argc,
