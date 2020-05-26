@@ -3,10 +3,13 @@
 #include "../utilities.h"
 #include "config.h"
 #include "parsers.h"
-#include <malloc.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
+
+#if HAVE_MALLOC_H
+#  include <malloc.h>
+#endif
 
 bool choco_parse_install_upgrade_arguments(ArgumentsData *data, int argc,
                                            char **argv);
