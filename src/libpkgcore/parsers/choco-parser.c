@@ -1,5 +1,6 @@
 #include "choco-parser.h"
 #include "../logging.h"
+#include "../pkg-data.h"
 #include "../utilities.h"
 #include "config.h"
 #include "parsers.h"
@@ -13,6 +14,10 @@
 
 bool choco_parse_install_upgrade_arguments(ArgumentsData *data, int argc,
                                            char **argv);
+bool choco_parse_uninstall_arguments(ArgumentsData *data, int argc,
+                                     char **argv);
+bool choco_parse_list_search_info_arguments(ArgumentsData *data, int argc,
+                                            char **argv);
 
 ArgumentsData *choco_parse_arguments(int argc, char **argv)
 {
@@ -37,9 +42,31 @@ ArgumentsData *choco_parse_arguments(int argc, char **argv)
                || argc > 1;
       setHelpArg = !result && argc == 1;
       break;
+    case 1:
+      data->action = UNINSTALL;
+      result =
+          choco_parse_uninstall_arguments(data, argc - 1, argv + 1) || argc > 1;
+      setHelpArg = !result && argc == 1;
+      break;
     case 2:
       data->action = UPGRADE;
       result = choco_parse_install_upgrade_arguments(data, argc - 1, argv + 1)
+               || argc > 1;
+      setHelpArg = !result && argc == 1;
+      break;
+    case 3:
+      data->action = LIST;
+      choco_parse_list_search_info_arguments(data, argc - 1, argv + 1);
+      result = true;
+      break;
+    case 4:
+      data->action = SEARCH;
+      choco_parse_list_search_info_arguments(data, argc - 1, argv + 1);
+      result = true;
+      break;
+    case 5:
+      data->action = INFO;
+      result = choco_parse_list_search_info_arguments(data, argc - 1, argv + 1)
                || argc > 1;
       setHelpArg = !result && argc == 1;
       break;
@@ -56,6 +83,10 @@ ArgumentsData *choco_parse_arguments(int argc, char **argv)
   if (setHelpArg || (data->flag & HELP_ARG)) {
     data->flag = HELP_ARG;
     result     = true;
+  }
+
+  if ((data->flag & LOCALONLY_ARG) == LOCALONLY_ARG) {
+    data->flag ^= REFRESH_ARG;
   }
 
   if (!result) {
@@ -112,10 +143,90 @@ bool choco_parse_install_upgrade_arguments(ArgumentsData *data, int argc,
       {
           // This item is just so the package 'all' won't be set as an unparsed
           // argument
-          .longArgs    = "all",
-          .type.action = data->action,
-          .unionType   = ACTION,
-      }};
+          .singleArgs = NULL,
+          .longArgs   = "all",
+          .unionType  = ACTION,
+      },
+  };
+  parserData[6].type.action = data->action;
+
+  return execute_parsing(data, parserData,
+                         sizeof(parserData) / sizeof(struct ParserData), argc,
+                         argv);
+}
+
+bool choco_parse_uninstall_arguments(ArgumentsData *data, int argc, char **argv)
+{
+  struct ParserData parserData[] = {
+      {
+          .singleArgs = "h?",
+          .longArgs   = "--help",
+          .type.flag  = HELP_ARG,
+          .unionType  = FLAG,
+          .abort      = true,
+      },
+      {
+          .singleArgs = "v",
+          .longArgs   = "--verbose",
+          .unionType  = FLAG,
+          .type.flag  = VERBOSE_ARG,
+      },
+      {
+          .singleArgs = "d",
+          .longArgs   = "--debug",
+          .unionType  = FLAG,
+          .type.flag  = DEBUG_ARG,
+      },
+      {
+          .singleArgs   = "y",
+          .longArgs     = "--yes|--confirm",
+          .type.confirm = false,
+          .unionType    = CONFIRM,
+      },
+      {
+          .singleArgs = "x",
+          .longArgs   = "--forcedependencies|--force-dependencies|"
+                      "--removedependencies|--remove-dependencies",
+          .type.flag = UNNEEDED_ARG,
+          .unionType = FLAG,
+      },
+  };
+
+  return execute_parsing(data, parserData,
+                         sizeof(parserData) / sizeof(struct ParserData), argc,
+                         argv);
+}
+
+bool choco_parse_list_search_info_arguments(ArgumentsData *data, int argc,
+                                            char **argv)
+{
+  struct ParserData parserData[] = {
+      {
+          .singleArgs = "h?",
+          .longArgs   = "--help",
+          .type.flag  = HELP_ARG,
+          .unionType  = FLAG,
+          .abort      = true,
+      },
+      {
+          .singleArgs = "v",
+          .longArgs   = "--verbose",
+          .unionType  = FLAG,
+          .type.flag  = VERBOSE_ARG,
+      },
+      {
+          .singleArgs = "d",
+          .longArgs   = "--debug",
+          .unionType  = FLAG,
+          .type.flag  = DEBUG_ARG,
+      },
+      {
+          .singleArgs = "l",
+          .longArgs   = "--lo|--local|--localonly|--local-only",
+          .unionType  = FLAG,
+          .type.flag  = LOCALONLY_ARG,
+      },
+  };
 
   return execute_parsing(data, parserData,
                          sizeof(parserData) / sizeof(struct ParserData), argc,
