@@ -1,6 +1,5 @@
 #include "parsers.h"
 #include "../utilities.h"
-#include "choco-parser.h"
 #include "config.h"
 #include "pacman-parser.h"
 #include <stdbool.h>

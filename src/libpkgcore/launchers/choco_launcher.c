@@ -31,6 +31,11 @@ bool choco_launch_program(const ArgumentsData *data)
     }
 
     launch_program(program, arguments, elevate);
+    char **pos = arguments;
+    while (*pos) {
+      free(*pos);
+      pos++;
+    }
     free(arguments);
   }
   free(program);
