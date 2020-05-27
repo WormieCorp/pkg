@@ -6,21 +6,29 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 
 if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/version.info")
-  file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/version.info" _VERSION)
+  file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/version.info" _VERSION_ARR)
+  list(GET _VERSION_ARR 0 _VERSION)
+  list(GET _VERSION_ARR 1 _VERSION_SEMVER)
+  list(GET _VERSION_ARR 2 _VERSION_FULLSEMVER)
+  list(GET _VERSION_ARR 3 _VERSION_BUILD)
 else()
   set(_VERSION 0.1.0)
+  set(_VERSION_SEMVER ${_VERSION})
+  set(_VERSION_FULLSEMVER ${_VERSION})
+  set(_VERSION_BUILD 0)
 endif()
 
 if (CMAKE_VERSION VERSION_LESS "3.11.0")
-  project(pkg VERSION 0.1.0 LANGUAGES C CXX) # We must have CXX enabled on older cmake versions
+  project(pkg VERSION ${_VERSION} LANGUAGES C CXX) # We must have CXX enabled on older cmake versions
 else()
-  project(pkg VERSION 0.1.0 LANGUAGES C) # We must have CXX enabled on older cmake versions
+  project(pkg VERSION ${_VERSION} LANGUAGES C)
 endif()
 set(CMAKE_PROJECT_DESCRIPTION "${_description}")
 set(PROJECT_DESCRIPTION "${_description}")
 set(CMAKE_HOMEPAGE_URL "https://github.com/WormieCorp/pkg")
 set(PROJECT_HOMEPAGE_URL "${CMAKE_HOMEPAGE_URL}")
 set(CMAKE_INSTALL_UCRT_LIBRARIES TRUE)
+message("Building ${PROJECT_NAME} v${_VERSION_SEMVER}...")
 
 # Custom include
 set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT Deps)
@@ -79,4 +87,5 @@ if (WIN32)
   set(CPACK_BINARY_7Z ON)
 endif()
 
+set(CPACK_PACKAGE_VERSION ${_VERSION_SEMVER})
 include(CPack)

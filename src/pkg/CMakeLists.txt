@@ -7,6 +7,7 @@ generate_product_version(
   C_SOURCES
   NAME pkg
   COMPANY_NAME "Kim J. Nordmo"
+  VERSION_REVISION ${_VERSION_BUILD}
 )
 
 add_executable(pkg ${C_SOURCES})

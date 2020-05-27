@@ -1,6 +1,9 @@
 #ifndef _HAVE_PKG_CONFIG_H
 #define _HAVE_PKG_CONFIG_H
 
+#define PROJECT_NAME "@PROJECT_NAME@"
+#define PROJECT_VERSION "@_VERSION_FULLSEMVER@"
+
 #cmakedefine01 HAVE_ALLOCA_H
 #cmakedefine01 HAVE_MALLOC_H
 #cmakedefine01 HAVE_STRING_H

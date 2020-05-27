@@ -11,15 +11,22 @@ environment:
     - appveyor_build_worker_image: Ubuntu
       GENERATORS: TGZ;STGZ
     - appveyor_build_worker_image: macOS
-      GENERATORS: TGZ;productbuild
+      GENERATORS: TGZ;STGZ
+      DOTNET_ROOT: "/Users/appveyor/.dotnet"
 configuration: Release
 
 install:
-  - cmd: |
-      dotnet tool install -g GitVersion.Tool --version 5.3.4
-      dotnet gitversion /output buildserver
+  - sh: |
+      if [ "$CI_LINUX" == "false" ]; then
+        export DOTNET_ROOT="/Users/appveyor/.dotnet"
+        export PATH="$PATH:$DOTNET_ROOT/tools"
+      fi
+  - |
+    dotnet tool install -g GitVersion.Tool --version 5.3.4
+    dotnet gitversion /output buildserver
 before_build:
-  - pwsh: echo "$env:APPVEYOR_BUILD_VERSION" > version.info
+  - pwsh: |
+      "$env:GitVersion_MajorMinorPatch`n$env:GitVersion_SemVer`n$env:GitVersion_FullSemVer`n$env:GitVersion_BuildMetaData" | Out-File version.info
 build_script:
   - cmd: cmake -S "%APPVEYOR_BUILD_FOLDER%" -B "%APPVEYOR_BUILD_FOLDER%/.build" -DCPACK_GENERATOR="7Z;ZIP" -A %PLATFORM% -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W4"
   - sh: cmake -S "$APPVEYOR_BUILD_FOLDER" -B "$APPVEYOR_BUILD_FOLDER/.build" -DCPACK_GENERATOR="$GENERATORS" -DCPACK_SOURCE_GENERATOR="TGZ;ZIP" -DCMAKE_BUILD_TYPE=$CONFIGURATION -DCMAKE_C_FLAGS="-Wall -Wextra"

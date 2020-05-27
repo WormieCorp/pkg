@@ -23,6 +23,7 @@ generate_product_version(
   NAME pkgcore
   COMPANY_NAME "Kim J. Nordmo"
   FILE_DESCRIPTION "Library responsible for handling the core logic of the pkg program."
+  VERSION_REVISION ${_VERSION_BUILD}
 )
 
 add_library(pkgcore ${C_SOURCES})
