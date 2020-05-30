@@ -28,7 +28,7 @@ before_build:
   - pwsh: |
       "$env:GitVersion_MajorMinorPatch`n$env:GitVersion_SemVer`n$env:GitVersion_FullSemVer`n$env:GitVersion_BuildMetaData" | Out-File version.info
 build_script:
-  - cmd: cmake -S "%APPVEYOR_BUILD_FOLDER%" -B "%APPVEYOR_BUILD_FOLDER%/.build" -DCPACK_GENERATOR="7Z;ZIP" -A %PLATFORM% -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W4"
+  - cmd: cmake -S "%APPVEYOR_BUILD_FOLDER%" -B "%APPVEYOR_BUILD_FOLDER%/.build" -DCPACK_GENERATOR="7Z;ZIP" -A %PLATFORM% -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W4" -DBUILD_SHARED_LIBS=TRUE
   - sh: cmake -S "$APPVEYOR_BUILD_FOLDER" -B "$APPVEYOR_BUILD_FOLDER/.build" -DCPACK_GENERATOR="$GENERATORS" -DCPACK_SOURCE_GENERATOR="TGZ;ZIP" -DCMAKE_BUILD_TYPE=$CONFIGURATION -DCMAKE_C_FLAGS="-Wall -Wextra"
   - cmd: cmake --build "%APPVEYOR_BUILD_FOLDER%/.build" --config %CONFIGURATION% -j 4
   - sh: cd "$APPVEYOR_BUILD_FOLDER/.build" && make -j4

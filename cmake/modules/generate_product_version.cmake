@@ -52,7 +52,8 @@ function(generate_product_version outfiles)
         COMMENTS
         ORIGINAL_FILENAME
         INTERNAL_NAME
-        FILE_DESCRIPTION)
+        FILE_DESCRIPTION
+        FILE_TYPE)
     if (NOT MSVC)
       return()
     endif()
@@ -81,6 +82,10 @@ function(generate_product_version outfiles)
       set(PRODUCT_FILE_DESCRIPTION "${PROJECT_DESCRIPTION}")
     endif()
 
+    if (NOT PRODUCT_FILE_TYPE)
+      set(PRODUCT_FILE_TYPE "VFT_APP")
+    endif()
+
     if (NOT PRODUCT_VERSION_MAJOR EQUAL 0 AND (NOT PRODUCT_VERSION_MAJOR OR "${PRODUCT_VERSION_MAJOR}" STREQUAL ""))
         set(PRODUCT_VERSION_MAJOR 1)
     endif()
@@ -99,7 +104,7 @@ function(generate_product_version outfiles)
         set(PRODUCT_COMPANY_COPYRIGHT "${PRODUCT_COMPANY_NAME} (C) Copyright ${PRODUCT_CURRENT_YEAR}")
     endif()
     if (NOT PRODUCT_COMMENTS OR "${PRODUCT_COMMENTS}" STREQUAL "")
-        set(PRODUCT_COMMENTS "${PRODUCT_NAME} v${PRODUCT_VERSION_MAJOR}.${PRODUCT_VERSION_MINOR}")
+        set(PRODUCT_COMMENTS "${PRODUCT_NAME} v${_VERSION_FULLSEMVER}")
     endif()
     if (NOT PRODUCT_ORIGINAL_FILENAME OR "${PRODUCT_ORIGINAL_FILENAME}" STREQUAL "")
         set(PRODUCT_ORIGINAL_FILENAME "${PRODUCT_NAME}")
@@ -111,8 +116,14 @@ function(generate_product_version outfiles)
         set(PRODUCT_FILE_DESCRIPTION "${PRODUCT_NAME}")
     endif()
 
-    set (_VersionInfoFile ${CMAKE_CURRENT_BINARY_DIR}/VersionInfo.h)
-    set (_VersionResourceFile ${CMAKE_CURRENT_BINARY_DIR}/VersionResource.rc)
+    if (_VERSION_FULLSEMVER MATCHES "\\-")
+      set(IS_PRERELEASE 1)
+    else()
+      set(IS_PRERELEASE 0)
+    endif()
+
+    set (_VersionInfoFile ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT_NAME}_VersionInfo.h)
+    set (_VersionResourceFile ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT_NAME}_VersionResource.rc)
     configure_file(
         ${GenerateProductVersionCurrentDir}/VersionInfo.in
         ${_VersionInfoFile}
@@ -120,7 +131,7 @@ function(generate_product_version outfiles)
     configure_file(
         ${GenerateProductVersionCurrentDir}/VersionResource.rc
         ${_VersionResourceFile}
-        COPYONLY)
+        @ONLY)
     list(APPEND ${outfiles} ${_VersionInfoFile} ${_VersionResourceFile})
     set (${outfiles} ${${outfiles}} PARENT_SCOPE)
 endfunction()

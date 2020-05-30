@@ -16,6 +16,11 @@ if (WIN32)
 else()
   set(C_SOURCES ${C_SOURCES} launchers/launcher_dummy.c)
 endif()
+if (BUILD_SHARED_LIBS)
+  set(_TARGET_BUILD_TYPE "VFT_DLL")
+else()
+  set(_TARGET_BUILD_TYPE "VFT_STATIC_LIB")
+endif()
 
 include(generate_product_version)
 generate_product_version(
@@ -24,6 +29,7 @@ generate_product_version(
   COMPANY_NAME "Kim J. Nordmo"
   FILE_DESCRIPTION "Library responsible for handling the core logic of the pkg program."
   VERSION_REVISION ${_VERSION_BUILD}
+  FILE_TYPE ${_TARGET_BUILD_TYPE}
 )
 
 add_library(pkgcore ${C_SOURCES})
