@@ -12,7 +12,6 @@ environment:
       GENERATORS: TGZ;STGZ
     - appveyor_build_worker_image: macOS
       GENERATORS: TGZ;STGZ
-      DOTNET_ROOT: "/Users/appveyor/.dotnet"
 configuration: Release
 
 install:
