@@ -27,6 +27,7 @@ set(CMAKE_PROJECT_DESCRIPTION "${_description}")
 set(PROJECT_DESCRIPTION "${_description}")
 set(CMAKE_HOMEPAGE_URL "https://github.com/WormieCorp/pkg")
 set(PROJECT_HOMEPAGE_URL "${CMAKE_HOMEPAGE_URL}")
+set(PROJECT_AUTHOR "Kim J. Nordmo")
 set(CMAKE_INSTALL_UCRT_LIBRARIES TRUE)
 message("Building ${PROJECT_NAME} v${_VERSION_SEMVER}...")
 
@@ -83,8 +84,22 @@ endif()
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 if (WIN32)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/platforms/windows/pkg.iss ${CMAKE_CURRENT_BINARY_DIR}/pkg.iss @ONLY)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/platforms/windows/modpath.iss ${CMAKE_CURRENT_BINARY_DIR}/modpath.iss COPYONLY)
+
+  file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/files.iss" "Source: \"${CMAKE_CURRENT_BINARY_DIR}/{#Configuration}/pkg.exe\"; DestDir: \"{app}\"\n")
+  if (BUILD_SHARED_LIBS)
+    file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/files.iss" "Source: \"${CMAKE_CURRENT_BINARY_DIR}/{#Configuration}/pkgcore.dll\"; DestDir: \"{app}\"\n")
+  endif()
+
+  foreach(_lib ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS})
+    file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/files.iss" "Source: \"${_lib}\"; DestDir: \"{app}\"\n")
+  endforeach()
+  find_program(ISCC_EXEC "iscc")
+  add_custom_target(create-installer ${ISCC_EXEC} "/DConfiguration=$<CONFIG>" ${CMAKE_CURRENT_BINARY_DIR}/pkg.iss
+    DEPENDS pkgcore pkg)
+
   set(CPACK_BINARY_NSIS OFF)
-  set(CPACK_BINARY_7Z ON)
 endif()
 
 set(CPACK_PACKAGE_VERSION ${_VERSION_SEMVER})

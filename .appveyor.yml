@@ -23,6 +23,7 @@ install:
   - |
     dotnet tool install -g GitVersion.Tool --version 5.3.4
     dotnet gitversion /output buildserver
+  - cmd: choco install innosetup
 before_build:
   - pwsh: |
       "$env:GitVersion_MajorMinorPatch`n$env:GitVersion_SemVer`n$env:GitVersion_FullSemVer`n$env:GitVersion_BuildMetaData" | Out-File version.info
@@ -35,6 +36,7 @@ test_script:
   - cmd: |
       cd "%APPVEYOR_BUILD_FOLDER%\.build"
       ctest -C %CONFIGURATION%
+      cmake --build . --config %CONFIGURATION% --target create-installer
       cmake --build . --config %CONFIGURATION% --target package
   - sh: |
       cd "$APPVEYOR_BUILD_FOLDER/.build"
@@ -53,4 +55,5 @@ artifacts:
   - path: .build/*.tar.gz
   - path: .build/*.zip
   - path: .build/*.pkg
+  - path: .build/Output/*.exe
   - path: version.info # If someone want to use git and compile with correct version

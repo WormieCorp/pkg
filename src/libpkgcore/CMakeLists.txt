@@ -26,7 +26,7 @@ include(generate_product_version)
 generate_product_version(
   C_SOURCES
   NAME pkgcore
-  COMPANY_NAME "Kim J. Nordmo"
+  COMPANY_NAME ${PROJECT_AUTHOR}
   FILE_DESCRIPTION "Library responsible for handling the core logic of the pkg program."
   VERSION_REVISION ${_VERSION_BUILD}
   FILE_TYPE ${_TARGET_BUILD_TYPE}

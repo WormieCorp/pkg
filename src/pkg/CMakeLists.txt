@@ -6,7 +6,7 @@ include(generate_product_version)
 generate_product_version(
   C_SOURCES
   NAME pkg
-  COMPANY_NAME "Kim J. Nordmo"
+  COMPANY_NAME ${PROJECT_AUTHOR}
   VERSION_REVISION ${_VERSION_BUILD}
 )
 
