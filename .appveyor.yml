@@ -54,3 +54,4 @@ artifacts:
   - path: .build/*.tar.gz
   - path: .build/*.zip
   - path: .build/*.pkg
+  - path: version.info # If someone want to use git and compile with correct version
