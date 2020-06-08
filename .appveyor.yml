@@ -17,8 +17,7 @@ configuration: Release
 install:
   - sh: |
       if [ "$CI_LINUX" == "false" ]; then
-        export DOTNET_ROOT="/Users/appveyor/.dotnet"
-        export PATH="$PATH:$DOTNET_ROOT/tools"
+        export PATH="$PATH:/Users/appveyor/.dotnet/tools"
       fi
   - |
     dotnet tool install -g GitVersion.Tool --version 5.3.4
