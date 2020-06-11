@@ -19,3 +19,7 @@ jobs:
       run: cmake -S "${{ github.workspace }}" -B "${{ env.workdir }}" -DCPACK_GENERATOR="7Z;ZIP" -A ${{ matrix.arch }} -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W4" -DBUILD_SHARED_LIBS=TRUE
     - name: Build
       run: cmake --build "${{ env.workdir }}" --config ${{ env.configuration }} -j 4
+    - name: Test
+      run: |
+        cd "${{ env.workdir }}"
+        ctest -C ${{ env.configuration }}
