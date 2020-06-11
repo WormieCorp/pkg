@@ -23,3 +23,19 @@ jobs:
       run: |
         cd "${{ env.workdir }}"
         ctest -C ${{ env.configuration }}
+    - name: Package
+      run: cmake --build "${{ env.workdir }}" --config ${{ env.configuration }} --target package
+    - name: Installer
+      run: cmake --build "${{ env.workdir }}" --config ${{ env.configuration }} --target create-installer
+    - name: Upload-Installer
+      uses: actions/upload-artifact@v2.0.1
+      with:
+        path: "${{ env.workdir }}/*.exe"
+    - name: Upload-ZIPArchives
+      uses: actions/upload-artifact@v2.0.1
+      with:
+        path: "${{ env.workdir }}/*.zip"
+    - name: Upload-7ZArchives
+      uses: actions/upload-artifact@v2.0.1
+      with:
+        path: "${{ env.workdir }}/*.7z"
