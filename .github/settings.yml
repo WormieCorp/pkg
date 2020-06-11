@@ -64,9 +64,9 @@ labels:
 
 teams:
   - name: pkg-admins
-    permissions: admin
+    permission: admin
   - name: pkg-maintainers
-    permissions: maintain # can be pull, push, admin, maintain or triage
+    permission: push # can be pull, push, admin, maintain or triage
 
 branches:
   - name: master
