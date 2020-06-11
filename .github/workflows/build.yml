@@ -1,0 +1,16 @@
+name: Build Project
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build pkg
+      uses: ashutoshvarma/action-cmake-build@v1
+      with:
+        run-test: true
+        install-build: true
