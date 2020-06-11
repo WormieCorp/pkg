@@ -30,7 +30,7 @@ jobs:
     - name: Upload-Installer
       uses: actions/upload-artifact@v2.0.1
       with:
-        path: "${{ env.workdir }}/Output/*.exe"
+        path: "${{ env.workdir }}/Output"
     - name: Upload-ZIPArchives
       uses: actions/upload-artifact@v2.0.1
       with:
@@ -54,13 +54,13 @@ jobs:
       - name: Configure
         run: cmake -S "${{ github.workspace }}" -B "${{ env.workdir }}" -DCPACK_GENERATOR="TGZ" -DCPACK_SOURCE_GENERATOR="TGZ" -DCMAKE_BUILD_TYPE=${{ env.configuration }} -DCMAKE_C_FLAGS="-Wall -Wextra"
       - name: Build
-        run: cd "${{ github.workspace }}" && make -j4
+        run: cd "${{ env.workdir }}" && make -j4
       - name: Test
-        run: cd "${{ github.workspace }}" && make test
+        run: cd "${{ env.workdir }}" && make test
       - name: Package
-        run: cd "${{ github.workspace }}" && make package/fast
+        run: cd "${{ env.workdir }}" && make package/fast
       - name: Package Source
-        run: cd "${{ github.workspace }}" && make package_source
+        run: cd "${{ env.workdir }}" && make package_source
       - name: Upload-Archives
         uses: actions/upload-artifact@v2.0.1
         with:
