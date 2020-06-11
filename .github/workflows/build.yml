@@ -30,7 +30,7 @@ jobs:
     - name: Upload-Installer
       uses: actions/upload-artifact@v2.0.1
       with:
-        path: "${{ env.workdir }}/*.exe"
+        path: "${{ env.workdir }}/Output/*.exe"
     - name: Upload-ZIPArchives
       uses: actions/upload-artifact@v2.0.1
       with:
