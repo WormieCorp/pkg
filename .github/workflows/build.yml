@@ -9,8 +9,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Build pkg
+    - name: Build Windows x64
+      if: runner.os == 'Windows'
       uses: ashutoshvarma/action-cmake-build@v1
       with:
+        build-dir: ${{ runner.workspace }}/build-x64
+        configure-options: '-DCPACK_GENERATOR="7Z;ZIP" -A x64 -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W4" -DBUILD_SHARED_LIBS=TRUE'
+        run-test: true
+        install-build: true
+    - name: Build pkg x86
+      if: runner.os == 'Windows'
+      uses: ashutoshvarma/action-cmake-build@v1
+      with:
+        build-dir: ${{ runner.workspace }}/build-x86
+        configure-options: '-DCPACK_GENERATOR="7Z;ZIP" -A Win32 -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W4" -DBUILD_SHARED_LIBS=TRUE'
         run-test: true
         install-build: true
