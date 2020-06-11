@@ -39,3 +39,29 @@ jobs:
       uses: actions/upload-artifact@v2.0.1
       with:
         path: "${{ env.workdir }}/*.7z"
+
+  unix:
+    runs-on: ${{ matrix.os }}
+    env:
+      workdir: "${{ github.workspace }}/build"
+      configuration: Release
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure
+        run: cmake -S "${{ github.workspace }}" -B "${{ env.workdir }}" -DCPACK_GENERATOR="TGZ" -DCPACK_SOURCE_GENERATOR="TGZ" -DCMAKE_BUILD_TYPE=${{ env.configuration }} -DCMAKE_C_FLAGS="-Wall -Wextra"
+      - name: Build
+        run: cd "${{ github.workspace }}" && make -j4
+      - name: Test
+        run: cd "${{ github.workspace }}" && make test
+      - name: Package
+        run: cd "${{ github.workspace }}" && make package/fast
+      - name: Package Source
+        run: cd "${{ github.workspace }}" && make package_source
+      - name: Upload-Archives
+        uses: actions/upload-artifact@v2.0.1
+        with:
+          path: "${{ env.workdir }}/*.tar.gz"
