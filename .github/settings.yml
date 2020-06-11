@@ -1,0 +1,109 @@
+repository:
+  name: pkg
+  description: Small utility to transform package manager argument to/from different package managers.
+  homepage: null
+  topics: package, package-transformer, package-parser
+  private: false
+  has_issues: true
+  has_projects: false
+  has_wiki: false
+  has_downloads: false
+  default_branch: develop
+  allow_squash_merge: true
+  allow_merge_commit: true
+  allow_rebase_merge: true
+  delete_branch_on_merge: true
+
+labels:
+  - name: bug
+    color: #d73a4a
+    description: There is a problem with the application
+  - name: documentation
+    color: #0075ca
+    description: Improvements or additions to the documentation
+  - name: duplicate
+    color: #cfd3d7
+    description: This issue or pull request already exists
+  - name: improvement
+    color: #a2eeef
+    description: Improvements to the code without adding any new functionality
+    oldname: enhancement
+  - name: feature
+    color: #2f4299
+    description: New functionality
+  - name: help wanted
+    color: #008672
+    description: Help from the community is needed for to resolve this issue
+  - name: up for grabs
+    color: #34e550
+    description: The issue is of low priority, and relies on the community to provide pull requests to add functionality/fix bug
+  - name: invalid
+    color: #e4e669
+    description: Issue is not relevant for the application, could be problem in third party
+  - name: Platform: OSX
+    color: #d4c5f9
+    description: Only relevant for Mac OSX platforms
+    oldname: OSX
+  - name: Platform: Linux
+    color: #ffe458
+    description: Only relevant for Linux platforms
+  - name: Platform: Windows
+    color: #70b5d1
+    description: Only relevant for Windows platforms
+  - name: question
+    color: #d876e3
+    description: Issue is a question about the repository or application
+  - name: wonfix
+    color: #ffffff
+    description: The issue is working as intended, and will not be worked on
+
+#collaborators:
+# Only for future reference
+#  - username:
+#    permissions: maintain # can be pull, push, admin, maintain or triage
+
+teams:
+  - name: pkg-admins
+    permissions: admin
+  - name: pkg-maintainers
+    permissions: maintain # can be pull, push, admin, maintain or triage
+
+branches:
+  - name: master
+    protection:
+      allow_force_pushes: false
+      allow_deletions: false
+      required_pull_request_reviews:
+        dismiss_stale_reviews: true
+        require_code_owner_reviews: true
+        required_approving_review_count: 1
+        dismissal_restrictions:
+          teams: [pkg-admins, pkg-maintainers]
+      required_status_checks:
+        strict: true
+        contexts:
+          - unix (macos-latest)
+          - unix (ubuntu-latest)
+          - windows (Win32)
+          - windows (x64)
+      restrictions:
+        teams: [pkg-admins]
+  - name: develop
+    protection:
+      allow_force_pushes: false
+      allow_deletions: false
+      required_pull_request_reviews:
+        dismiss_stale_reviews: true
+        require_code_owner_reviews: true
+        required_approving_review_count: 1
+        dismissal_restrictions:
+          teams: [pkg-admins, pkg-maintainers]
+      required_status_checks:
+        strict: true
+        contexts:
+          - unix (macos-latest)
+          - unix (ubuntu-latest)
+          - windows (Win32)
+          - windows (x64)
+      restrictions:
+        teams: [pkg-admins, pkg-maintainers]
