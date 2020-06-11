@@ -6,30 +6,11 @@ jobs:
   build:
 
     runs-on: windows-latest
+    strategy:
+      matrix:
+        arch: [x64, Win32]
 
     steps:
     - uses: actions/checkout@v2
-    - name: Build x64
-      uses: ashutoshvarma/action-cmake-build@v1
-      with:
-        build-dir: ${{ runner.workspace }}/build-x64
-        configure-options: '-DCPACK_GENERATOR="7Z;ZIP" -A x64 -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W4" -DBUILD_SHARED_LIBS=TRUE'
-        run-test: true
-        install-build: true
-    - name: Create x64 installer
-      uses: ashutoshvarma/action-cmake-build@v1
-      with:
-        build-dir: ${{ runner.workspace }}/build-x64
-        target: create-installer
-    - name: Build x86
-      uses: ashutoshvarma/action-cmake-build@v1
-      with:
-        build-dir: ${{ runner.workspace }}/build-x86
-        configure-options: '-DCPACK_GENERATOR="7Z;ZIP" -A Win32 -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W4" -DBUILD_SHARED_LIBS=TRUE'
-        run-test: true
-        install-build: true
-    - name: Create x86 installer
-      uses: ashutoshvarma/action-cmake-build@v1
-      with:
-        build-dir: ${{ runner.workspace }}/build-x86
-        target: create-installer
+    - name: Configure
+      run: cmake -S "${{ github.workspace }}" -B "${{ github.workspace }}/../../build/${{ matrix.arch }}" -DCPACK_GENERATOR="7Z;ZIP" -A ${{ matrix.arch }} -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W4" -DBUILD_SHARED_LIBS=TRUE
