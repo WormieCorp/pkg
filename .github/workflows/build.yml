@@ -1,0 +1,21 @@
+name: Build
+
+on: [push, pull_request]
+
+jobs:
+  windows:
+
+    runs-on: windows-latest
+    env:
+      workdir: "${{ github.workspace }}/../../build-${{ matrix.arch }}"
+      configuration: Release
+    strategy:
+      matrix:
+        arch: [x64, Win32]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Configure
+      run: cmake -S "${{ github.workspace }}" -B "${{ env.workdir }}" -DCPACK_GENERATOR="7Z;ZIP" -A ${{ matrix.arch }} -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W4" -DBUILD_SHARED_LIBS=TRUE
+    - name: Build
+      run: cmake --build "${{ env.workdir }}" --config ${{ env.configuration }} -j 4
