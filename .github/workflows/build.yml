@@ -7,7 +7,7 @@ jobs:
 
     runs-on: windows-latest
     env:
-      workdir: "${{ github.workspace }}/../../build-${{ matrix.arch }}"
+      workdir: "${{ github.workspace }}/build"
       configuration: Release
     strategy:
       matrix:
